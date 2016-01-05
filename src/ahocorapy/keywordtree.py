@@ -2,7 +2,9 @@
 Simple ahocorasick implementation entirely written in python.
 Supports unicode.
 
-TODO: optimize!
+Slightly optimized.
+
+TODO: optimize moar!
 
 Created on Jan 5, 2016
 
@@ -38,11 +40,13 @@ class KeywordTree:
         for idx, _ in enumerate(text):
             current_state = self._zero_state
             index = idx
-            while current_state.follow(text[index:index + 1]) is not None:
-                current_state = current_state.follow(text[index:index + 1])
+            next_state = current_state.follow(text[index:index + 1])
+            while next_state is not None:
+                current_state = next_state
                 if current_state._success:
                     return (current_state._matched_keyword, idx)
                 index += 1
+                next_state = current_state.follow(text[index:index + 1])
         return None
 
     def __str__(self):
