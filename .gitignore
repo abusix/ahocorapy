@@ -2,3 +2,5 @@
 .project
 .pydevproject
 .settings/
+ahocorapy.egg-info/
+

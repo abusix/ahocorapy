@@ -43,6 +43,9 @@ class KeywordTree:
                 index += 1
         return None
 
+    def __str__(self):
+        return "ahocorapy KeywordTree with %i states." % self._state_count
+
 
 class State:
 
@@ -63,3 +66,7 @@ class State:
     def mark_success(self, keyword):
         self._success = True
         self._matched_keyword = keyword
+
+    def __str__(self):
+        return "ahocorapy State with id %i" +\
+               " and %i followers" % (self._id, len(self._transitions))
