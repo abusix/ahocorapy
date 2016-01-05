@@ -1,4 +1,9 @@
 '''
+Simple ahocorasick implementation entirely written in python.
+Supports unicode.
+
+TODO: optimize!
+
 Created on Jan 5, 2016
 
 @author: frederik
@@ -12,6 +17,8 @@ class KeywordTree:
         self._state_count = 1
 
     def add(self, keyword):
+        if len(keyword) <= 0:
+            return
         current_state = self._zero_state
         idx = 0
         while current_state.follow(keyword[idx:idx + 1]) is not None:

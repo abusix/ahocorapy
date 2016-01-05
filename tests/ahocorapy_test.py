@@ -6,11 +6,30 @@ from ahocorapy.keywordtree import KeywordTree
 
 class TestAhocorapy(unittest.TestCase):
 
+    def test_empty_tree(self):
+        kwtree = KeywordTree()
+
+        result = kwtree.search('zef')
+        self.assertIsNone(result)
+
+    def test_empty_input(self):
+        kwtree = KeywordTree()
+        kwtree.add('bla')
+
+        result = kwtree.search('')
+        self.assertIsNone(result)
+
+    def test_empty_keyword(self):
+        kwtree = KeywordTree()
+        kwtree.add('')
+
+        result = kwtree.search('')
+        self.assertIsNone(result)
+
     def test_simple(self):
         kwtree = KeywordTree()
         kwtree.add('bla')
         kwtree.add('blue')
-        kwtree.add(u'颜到')
 
         result = kwtree.search('bl')
         self.assertIsNone(result)
@@ -26,9 +45,6 @@ class TestAhocorapy(unittest.TestCase):
 
         result = kwtree.search('red green blue grey')
         self.assertEqual(('blue', 10), result)
-
-        result = kwtree.search(u'春华变苍颜到处群魔乱')
-        self.assertEqual((u'颜到', 4), result)
 
     def test_unicode(self):
         kwtree = KeywordTree()
