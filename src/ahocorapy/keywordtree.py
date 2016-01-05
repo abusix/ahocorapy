@@ -8,7 +8,7 @@ Created on Jan 5, 2016
 class KeywordTree:
 
     def __init__(self):
-        self._zero_state = ZeroState()
+        self._zero_state = State(0)
         self._state_count = 1
 
     def add(self, keyword):
@@ -24,10 +24,6 @@ class KeywordTree:
             self._state_count += 1
             idx += 1
         current_state.mark_success(keyword)
-
-    def finalize(self):
-        print self._state_count
-        self._zero_state.finalize()
 
     def search(self, text):
         for idx, _ in enumerate(text):
@@ -60,19 +56,3 @@ class State:
     def mark_success(self, keyword):
         self._success = True
         self._matched_keyword = keyword
-
-
-class ZeroState(State):
-
-    def __init__(self):
-        State.__init__(self, 0)
-        self._finalized = False
-
-    def finalize(self):
-        self._finalized = True
-
-    def follow(self, symbol):
-        result = State.follow(self, symbol)
-        if result is not None or not self._finalized:
-            return result
-        return self
