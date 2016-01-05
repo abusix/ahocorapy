@@ -16,7 +16,8 @@ setup(
     long_description='ahocorapy- A simple ahocorasick library, implemented entirely' +
     ' in python. No regexes etc supported. With unicode support',
     name='ahocorapy',
-    packages=find_packages(),
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
     install_requires=[],
     url='http://www.abusix.com/',
     version=__version__

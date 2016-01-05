@@ -21,9 +21,11 @@ class KeywordTree:
             return
         current_state = self._zero_state
         idx = 0
-        while current_state.follow(keyword[idx:idx + 1]) is not None:
-            current_state = current_state.follow(keyword[idx:idx + 1])
+        next_state = current_state.follow(keyword[idx:idx + 1])
+        while next_state is not None:
+            current_state = next_state
             idx += 1
+            next_state = current_state.follow(keyword[idx:idx + 1])
         while idx < len(keyword):
             new_state = State(self._state_count)
             current_state.add_transition_to(new_state, keyword[idx:idx + 1])
