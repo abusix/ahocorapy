@@ -8,4 +8,5 @@ with open('tests/data/domains.txt') as keyword_file:
     for keyword in keyword_list:
         kwtree.add(keyword)
     kwtree.finalize()
-    kwtree.search('blabla' * 100 + 'linkpt.com' + 'blabla' * 100)
+    for _ in range(0, 10000):
+        kwtree.search('blabla' * 100 + 'linkpt.com' + 'blabla' * 100)

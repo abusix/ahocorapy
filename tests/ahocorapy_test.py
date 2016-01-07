@@ -29,6 +29,16 @@ class TestAhocorapy(unittest.TestCase):
         result = kwtree.search('')
         self.assertIsNone(result)
 
+    def test_suffix_stuff(self):
+        kwtree = KeywordTree()
+        kwtree.add('blaaaaa')
+        kwtree.add('blue')
+        kwtree.add('aaaamen')
+        kwtree.finalize()
+
+        result = kwtree.search('shfohdfaaaaaamenbla')
+        self.assertEqual(('aaaamen', 9), result)
+
     def test_simple(self):
         kwtree = KeywordTree()
         kwtree.add('bla')
