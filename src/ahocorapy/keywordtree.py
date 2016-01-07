@@ -108,8 +108,6 @@ class Finalizer:
         zero_state = self._keyword_tree._zero_state
         zero_state._longest_strict_suffix = None
         self.search_longest_strict_suffixes(zero_state)
-        zero_state._dict_suffix = None
-        self.search_dict_suffix(zero_state)
 
     def search_longest_strict_suffixes(self, state):
         for symbol, child in state._transitions.iteritems():
@@ -123,21 +121,3 @@ class Finalizer:
                 else:
                     traversed = traversed._longest_strict_suffix
             self.search_longest_strict_suffixes(child)
-
-    def search_dict_suffix(self, state):
-        for child in state._transitions.itervalues():
-            if child._success:
-                # No need. We only want one match. Increase performance
-                continue
-            traversed = child
-            done = False
-            while not done:
-                if traversed._longest_strict_suffix is None:
-                    child._dict_suffix = None
-                    done = True
-                elif traversed._success:
-                    child._dict_suffix = traversed
-                    done = True
-                else:
-                    traversed = traversed._longest_strict_suffix
-            self.search_dict_suffix(child)
