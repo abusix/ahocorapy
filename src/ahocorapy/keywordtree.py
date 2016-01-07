@@ -58,11 +58,10 @@ class KeywordTree:
                 next_state = current_state._transitions[symbol]
             else:
                 traversing = current_state
-                while next_state is None and\
-                        traversing._longest_strict_suffix is not None:
-                    next_state = None
+                while traversing._longest_strict_suffix is not None:
                     if symbol in traversing._transitions:
                         next_state = traversing._transitions[symbol]
+                        break
                     traversing = traversing._longest_strict_suffix
                 if next_state is None:
                     next_state = self._zero_state
