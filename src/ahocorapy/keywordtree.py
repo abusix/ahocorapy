@@ -107,9 +107,9 @@ class Finalizer:
     def finalize(self):
         zero_state = self._keyword_tree._zero_state
         zero_state._longest_strict_suffix = None
-        self.search_longest_strict_suffixes(zero_state)
+        self.search_longest_strict_suffixes_for_children(zero_state)
 
-    def search_longest_strict_suffixes(self, state):
+    def search_longest_strict_suffixes_for_children(self, state):
         for symbol, child in state._transitions.iteritems():
             traversed = state
             found_suffix = False
@@ -120,4 +120,4 @@ class Finalizer:
                     found_suffix = True
                 else:
                     traversed = traversed._longest_strict_suffix
-            self.search_longest_strict_suffixes(child)
+            self.search_longest_strict_suffixes_for_children(child)
