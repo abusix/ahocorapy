@@ -8,6 +8,7 @@ class TestAhocorapy(unittest.TestCase):
 
     def test_empty_tree(self):
         kwtree = KeywordTree()
+        kwtree.finalize()
 
         result = kwtree.search('zef')
         self.assertIsNone(result)
@@ -15,6 +16,7 @@ class TestAhocorapy(unittest.TestCase):
     def test_empty_input(self):
         kwtree = KeywordTree()
         kwtree.add('bla')
+        kwtree.finalize()
 
         result = kwtree.search('')
         self.assertIsNone(result)
@@ -22,6 +24,7 @@ class TestAhocorapy(unittest.TestCase):
     def test_empty_keyword(self):
         kwtree = KeywordTree()
         kwtree.add('')
+        kwtree.finalize()
 
         result = kwtree.search('')
         self.assertIsNone(result)
@@ -30,6 +33,7 @@ class TestAhocorapy(unittest.TestCase):
         kwtree = KeywordTree()
         kwtree.add('bla')
         kwtree.add('blue')
+        kwtree.finalize()
 
         result = kwtree.search('bl')
         self.assertIsNone(result)
@@ -51,6 +55,7 @@ class TestAhocorapy(unittest.TestCase):
         kwtree.add('bla')
         kwtree.add('blue')
         kwtree.add(u'颜到')
+        kwtree.finalize()
 
         result = kwtree.search(u'春华变苍颜到处群魔乱')
         self.assertEqual((u'颜到', 4), result)
