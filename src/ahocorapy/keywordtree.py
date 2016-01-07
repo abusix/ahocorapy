@@ -44,17 +44,20 @@ class KeywordTree:
         if not self._finalized:
             raise ValueError('KeywordTree has not been finalized.' +
                              ' No search allowed. Call finalize() first.')
-        for idx, _ in enumerate(text):
-            current_state = self._zero_state
-            index = idx
-            next_state = current_state.follow(text[index:index + 1])
-            while next_state is not None:
-                current_state = next_state
-                if current_state._success:
-                    return (current_state._matched_keyword, idx)
-                index += 1
-                next_state = current_state.follow(text[index:index + 1])
-        return None
+        current_state = self._zero_state
+        for idx, symbol in enumerate(text):
+            next_state = current_state.follow(symbol)
+            traversing = current_state
+            while next_state is None and\
+                    traversing._longest_strict_suffix is not None:
+                next_state = traversing.follow(symbol)
+                traversing = traversing._longest_strict_suffix
+            if next_state is None:
+                next_state = self._zero_state
+            current_state = next_state
+            if current_state._success:
+                keyword = current_state._matched_keyword
+                return (keyword, idx + 1 - len(keyword))
 
     def finalize(self):
         if self._finalized:
@@ -92,8 +95,8 @@ class State:
         return False
 
     def __str__(self):
-        return "ahocorapy State with id %i" +\
-               " and %i followers" % (self._id, len(self._transitions))
+        return "ahocorapy State with id %i" % self._id +\
+               " and %i followers" % len(self._transitions)
 
 
 class Finalizer:
