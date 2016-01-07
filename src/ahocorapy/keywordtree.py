@@ -27,18 +27,25 @@ class KeywordTree:
             return
         current_state = self._zero_state
         idx = 0
-        next_state = current_state.follow(keyword[idx:idx + 1])
+        next_state = None
+        symbol = keyword[idx:idx + 1]
+        if symbol in current_state._transitions:
+            next_state = current_state._transitions[symbol]
         while next_state is not None:
             current_state = next_state
             idx += 1
-            next_state = current_state.follow(keyword[idx:idx + 1])
+            next_state = None
+            symbol = keyword[idx:idx + 1]
+            if symbol in current_state._transitions:
+                next_state = current_state._transitions[symbol]
         while idx < len(keyword):
             new_state = State(self._state_count)
-            current_state.add_transition_to(new_state, keyword[idx:idx + 1])
+            current_state._transitions[keyword[idx:idx + 1]] = new_state
             current_state = new_state
             self._state_count += 1
             idx += 1
-        current_state.mark_success(keyword)
+        current_state._success = True
+        current_state._matched_keyword = keyword
 
     def search(self, text):
         if not self._finalized:
@@ -46,11 +53,15 @@ class KeywordTree:
                              ' No search allowed. Call finalize() first.')
         current_state = self._zero_state
         for idx, symbol in enumerate(text):
-            next_state = current_state.follow(symbol)
+            next_state = None
+            if symbol in current_state._transitions:
+                next_state = current_state._transitions[symbol]
             traversing = current_state
             while next_state is None and\
                     traversing._longest_strict_suffix is not None:
-                next_state = traversing.follow(symbol)
+                next_state = None
+                if symbol in current_state._transitions:
+                    next_state = current_state._transitions[symbol]
                 traversing = traversing._longest_strict_suffix
             if next_state is None:
                 next_state = self._zero_state
@@ -77,23 +88,6 @@ class State:
         self._id = identifier
         self._transitions = {}
 
-    def add_transition_to(self, state, symbol):
-        self._transitions[symbol] = state
-
-    def follow(self, symbol):
-        if symbol in self._transitions:
-            return self._transitions[symbol]
-        return None
-
-    def mark_success(self, keyword):
-        self._success = True
-        self._matched_keyword = keyword
-
-    def _has_transition_with_symbol(self, symbol):
-        if symbol in self._transitions:
-            return True
-        return False
-
     def __str__(self):
         return "ahocorapy State with id %i" % self._id +\
                " and %i followers" % len(self._transitions)
@@ -115,7 +109,7 @@ class Finalizer:
             found_suffix = False
             while not found_suffix:
                 if traversed._longest_strict_suffix is None or\
-                        traversed._has_transition_with_symbol(symbol):
+                        symbol in traversed._transitions:
                     child._longest_strict_suffix = traversed
                     found_suffix = True
                 else:
