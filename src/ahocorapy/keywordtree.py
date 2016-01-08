@@ -1,22 +1,22 @@
 '''
-Simple ahocorasick implementation entirely written in python.
+Ahocorasick implementation entirely written in python.
 Supports unicode.
 
-Slightly optimized.
+Quite optimized, the code may not be as beautiful as you like,
+since inlining and so on was necessary
 
-TODO: optimize moar!
 
 Created on Jan 5, 2016
 
-@author: frederik
+@author: Frederik Petersen (fp@abusix.com)
 '''
 
 
 class KeywordTree:
 
     def __init__(self):
-        self._zero_state = {'id': 0, 'success': False, 'transitions': {}}
-        self._state_count = 1
+        self._zero_state = {
+            'id': 0, 'success': False, 'transitions': {}, 'parent': None}
         self._finalized = False
         self._states = [self._zero_state]
 
@@ -41,13 +41,12 @@ class KeywordTree:
                 next_state = self._states[current_state['transitions'][symbol]]
         while idx < len(keyword):
             new_state = {
-                'id': self._state_count, 'success': False, 'transitions': {},
+                'id': len(self._states), 'success': False, 'transitions': {},
                 'parent': current_state['id']}
-            self._states.append(new_state)
             current_state['transitions'][
-                keyword[idx:idx + 1]] = self._state_count
+                keyword[idx:idx + 1]] = len(self._states)
+            self._states.append(new_state)
             current_state = new_state
-            self._state_count += 1
             idx += 1
         current_state['success'] = True
         current_state['matched_keyword'] = keyword
@@ -58,24 +57,14 @@ class KeywordTree:
                              ' No search allowed. Call finalize() first.')
         current_state = self._zero_state
         for idx, symbol in enumerate(text):
-            next_state = None
             if symbol in current_state['transitions']:
-                next_state = self._states[current_state['transitions'][symbol]]
+                current_state = self._states[
+                    current_state['transitions'][symbol]]
+                if current_state['success']:
+                    keyword = current_state['matched_keyword']
+                    return (keyword, idx + 1 - len(keyword))
             else:
-                traversing = current_state
-                while traversing['longest_strict_suffix'] is not None:
-                    if symbol in traversing['transitions']:
-                        next_state = self._states[
-                            traversing['transitions'][symbol]]
-                        break
-                    traversing = self._states[
-                        traversing['longest_strict_suffix']]
-                if next_state is None:
-                    next_state = self._zero_state
-            current_state = next_state
-            if current_state['success']:
-                keyword = current_state['matched_keyword']
-                return (keyword, idx + 1 - len(keyword))
+                current_state = self._zero_state
 
     def finalize(self):
         if self._finalized:
@@ -86,6 +75,20 @@ class KeywordTree:
 
     def __str__(self):
         return "ahocorapy KeywordTree with %i states." % self._state_count
+
+    def __repr__(self):
+        pass
+
+    def dump(self):
+        tree = {}
+        tree['states'] = self._states
+        tree['finalized'] = self._finalized
+        return tree
+
+    def load(self, tree):
+        self._states = tree['states']
+        self._zero_state = self._states[0]
+        self._finalized = tree['finalized']
 
 
 class Finalizer:
@@ -98,6 +101,27 @@ class Finalizer:
         zero_state = self._keyword_tree._zero_state
         zero_state['longest_strict_suffix'] = None
         self.search_longest_strict_suffixes_for_children(zero_state)
+        shortcut = self.shortcut_suffix_search
+        for state in self._states:
+            if state['id'] > 0:
+                shortcut(state)
+        # Remove to save space
+        for state in self._states:
+            # Only needed during finalize
+            del state['longest_strict_suffix']
+            del state['parent']
+            # Remove since we only need one result
+            if state['success']:
+                del state['transitions']
+
+    def shortcut_suffix_search(self, state):
+        traversing = self._states[state['longest_strict_suffix']]
+        while traversing['id'] > 0:
+            for symbol_in_suffix in traversing['transitions']:
+                if symbol_in_suffix not in state['transitions']:
+                    state['transitions'][symbol_in_suffix] =\
+                        traversing['transitions'][symbol_in_suffix]
+            traversing = self._states[traversing['longest_strict_suffix']]
 
     def search_longest_strict_suffixes_for_children(self, state):
         for symbol, childid in state['transitions'].iteritems():

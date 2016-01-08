@@ -5,8 +5,6 @@ import re
 import pprint
 from ahocorapy.keywordtree import KeywordTree
 
-pp = pprint.PrettyPrinter(indent=4)
-
 
 class TestAhocorapy(unittest.TestCase):
 
