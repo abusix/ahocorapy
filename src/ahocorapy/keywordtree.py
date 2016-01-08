@@ -41,7 +41,8 @@ class KeywordTree:
                 next_state = self._states[current_state['transitions'][symbol]]
         while idx < len(keyword):
             new_state = {
-                'id': self._state_count, 'success': False, 'transitions': {}}
+                'id': self._state_count, 'success': False, 'transitions': {},
+                'parent': current_state['id']}
             self._states.append(new_state)
             current_state['transitions'][
                 keyword[idx:idx + 1]] = self._state_count
@@ -67,7 +68,8 @@ class KeywordTree:
                         next_state = self._states[
                             traversing['transitions'][symbol]]
                         break
-                    traversing = traversing['longest_strict_suffix']
+                    traversing = self._states[
+                        traversing['longest_strict_suffix']]
                 if next_state is None:
                     next_state = self._zero_state
             current_state = next_state
@@ -99,14 +101,33 @@ class Finalizer:
 
     def search_longest_strict_suffixes_for_children(self, state):
         for symbol, childid in state['transitions'].iteritems():
-            traversed = state
-            found_suffix = False
             child = self._states[childid]
-            while not found_suffix:
-                if traversed['longest_strict_suffix'] is None or\
-                        symbol in traversed['transitions']:
-                    child['longest_strict_suffix'] = traversed
-                    found_suffix = True
-                else:
-                    traversed = traversed['longest_strict_suffix']
+            self.search_longest_strict_suffix(child, symbol)
             self.search_longest_strict_suffixes_for_children(child)
+
+    def search_longest_strict_suffix(self, state, symbol):
+        if 'longest_strict_suffix' not in state:
+            parent = self._states[state['parent']]
+            if parent['id'] == 0:
+                state['longest_strict_suffix'] = 0
+            else:
+                found_suffix = False
+                if 'longest_strict_suffix' not in parent:
+                    # Has not been done yet. Do early
+                    self.search_longest_strict_suffix(parent, symbol)
+                traversed = self._states[parent['longest_strict_suffix']]
+                while not found_suffix:
+                    if symbol in traversed['transitions']:
+                        state['longest_strict_suffix'] = traversed[
+                            'transitions'][symbol]
+                        found_suffix = True
+                    elif traversed['id'] == 0:
+                        state['longest_strict_suffix'] = 0
+                        found_suffix = True
+                    else:
+                        if 'longest_strict_suffix' not in traversed:
+                            # Has not been done yet. Do early
+                            self.search_longest_strict_suffix(
+                                traversed, symbol)
+                        traversed = self._states[
+                            traversed['longest_strict_suffix']]

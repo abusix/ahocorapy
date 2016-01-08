@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import unittest
+import re
+import pprint
 from ahocorapy.keywordtree import KeywordTree
+
+pp = pprint.PrettyPrinter(indent=4)
 
 
 class TestAhocorapy(unittest.TestCase):
@@ -59,6 +63,18 @@ class TestAhocorapy(unittest.TestCase):
 
         result = kwtree.search('red green blue grey')
         self.assertEqual(('blue', 10), result)
+
+    def test_domains(self):
+        kwtree = KeywordTree()
+        with open('tests/data/domains.txt') as keyword_file:
+            keyword_list = map(
+                re.escape, map(str.strip, keyword_file.readlines()))
+        for keyword in keyword_list:
+            kwtree.add(keyword)
+        kwtree.finalize()
+
+        result = kwtree.search('linkpt.com')
+        self.assertIsNone(result)
 
     def test_unicode(self):
         kwtree = KeywordTree()
