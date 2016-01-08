@@ -5,6 +5,8 @@ Supports unicode.
 Quite optimized, the code may not be as beautiful as you like,
 since inlining and so on was necessary
 
+This library is optimized for the cPython interpreter.
+I will most likely run slower with pypy, etc.
 
 Created on Jan 5, 2016
 
