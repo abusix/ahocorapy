@@ -64,15 +64,13 @@ class TestAhocorapy(unittest.TestCase):
 
     def test_domains(self):
         kwtree = KeywordTree()
-        with open('tests/data/domains.txt') as keyword_file:
-            keyword_list = map(
-                re.escape, map(str.strip, keyword_file.readlines()))
-        for keyword in keyword_list:
-            kwtree.add(keyword)
+        kwtree.add('searchenginemarketingfordummies.com')
+        kwtree.add('linkpt.com')
+        kwtree.add('fnbpeterstown.com')
         kwtree.finalize()
 
-        result = kwtree.search('linkpt.com')
-        self.assertIsNone(result)
+        result = kwtree.search('peterchen@linkpt.com')
+        self.assertEqual(('linkpt.com', 10), result)
 
     def test_unicode(self):
         kwtree = KeywordTree()

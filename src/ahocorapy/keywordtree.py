@@ -77,7 +77,7 @@ class KeywordTree:
         return "ahocorapy KeywordTree with %i states." % self._state_count
 
     def __repr__(self):
-        pass
+        return self.dump()
 
     def dump(self):
         tree = {}
