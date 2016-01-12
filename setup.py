@@ -12,8 +12,8 @@ with open('%s/VERSION' % here) as f:
 setup(
     author='abusix',
     author_email='fp@abusix.com',
-    description='ahocorapy - Simple ahocorasick implementation',
-    long_description='ahocorapy- A simple ahocorasick library, implemented entirely' +
+    description='ahocorapy - Pure python ahocorasick implementation',
+    long_description='ahocorapy- A ahocorasick library, implemented entirely' +
     ' in python. No regexes etc supported. With unicode support',
     name='ahocorapy',
     packages=find_packages('src'),

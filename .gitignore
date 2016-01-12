@@ -3,4 +3,5 @@
 .pydevproject
 .settings/
 ahocorapy.egg-info/
-
+build/
+dist/
