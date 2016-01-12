@@ -16,16 +16,20 @@ Created on Jan 5, 2016
 
 class KeywordTree:
 
-    def __init__(self):
+    def __init__(self, case_insensitive=False):
         self._zero_state = {
             'id': 0, 'success': False, 'transitions': {}, 'parent': None}
         self._finalized = False
         self._states = [self._zero_state]
+        self._case_insensitive = case_insensitive
 
     def add(self, keyword):
         if self._finalized:
             raise ValueError('KeywordTree has been finalized.' +
                              ' No more keyword additions allowed')
+        original_keyword = keyword
+        if self._case_insensitive:
+            keyword = keyword.lower()
         if len(keyword) <= 0:
             return
         current_state = self._zero_state
@@ -51,12 +55,14 @@ class KeywordTree:
             current_state = new_state
             idx += 1
         current_state['success'] = True
-        current_state['matched_keyword'] = keyword
+        current_state['matched_keyword'] = original_keyword
 
     def search(self, text):
         if not self._finalized:
             raise ValueError('KeywordTree has not been finalized.' +
                              ' No search allowed. Call finalize() first.')
+        if self._case_insensitive:
+            text = text.lower()
         current_state = self._zero_state
         for idx, symbol in enumerate(text):
             if symbol in current_state['transitions']:

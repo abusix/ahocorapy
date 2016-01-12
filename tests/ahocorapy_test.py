@@ -85,6 +85,38 @@ class TestAhocorapy(unittest.TestCase):
         result = kwtree.search(u'三年过')
         self.assertIsNone(result)
 
+    def test_case_sensitivity(self):
+        kwtree = KeywordTree()
+        kwtree.add('bla')
+        kwtree.add('blue')
+        kwtree.add('blISs')
+        kwtree.finalize()
+
+        result = kwtree.search('bLa')
+        self.assertIsNone(result)
+
+        result = kwtree.search('BLISS')
+        self.assertIsNone(result)
+
+        result = kwtree.search('bliss')
+        self.assertIsNone(result)
+
+        result = kwtree.search('blISs')
+        self.assertEqual(('blISs', 0), result)
+
+    def test_case_insensitivity_mode(self):
+        kwtree = KeywordTree(case_insensitive=True)
+        kwtree.add('bla')
+        kwtree.add('blue')
+        kwtree.add('blISs')
+        kwtree.finalize()
+
+        result = kwtree.search('bLa')
+        self.assertEqual(('bla', 0), result)
+
+        result = kwtree.search('BLISS')
+        self.assertEqual(('blISs', 0), result)
+
 
 if __name__ == '__main__':
     unittest.main()
