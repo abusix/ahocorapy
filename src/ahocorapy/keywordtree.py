@@ -93,10 +93,11 @@ class KeywordTree:
                 self._symbols[symbol] = len(self._symbols)
                 self._symbol_list.append(symbol)
             symbol_id = self._symbols[symbol]
-            if symbol_id >= len(current_state['transitions']):
+            trans_len = len(current_state['transitions'])
+            if symbol_id >= trans_len:
                 current_state['transitions'].fromlist(
                     [-1] * (symbol_id -
-                            len(current_state['transitions']) + 1 +
+                            trans_len + 1 +
                             self._over_allocation))
             current_state['transitions'][symbol_id] = len(self._states)
             self._states.append(new_state)
