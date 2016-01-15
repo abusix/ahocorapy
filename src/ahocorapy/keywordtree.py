@@ -18,15 +18,28 @@ from array import array
 
 class KeywordTree:
 
-    def __init__(self, case_insensitive=False):
+    def __init__(self, case_insensitive=False,
+                 over_allocation=2):
+        '''
+        @param case_insensitive: If true, case will be ignored when searching.
+                                 Setting this to true will have a positive
+                                 impact on performance.
+                                 Defaults to false.
+        @param over_allocation: Determines how big initial transition arrays
+                                are and how much space is allocated in addition
+                                to what is essential when array needs to be
+                                resized. Default value 2 seemed to be sweet
+                                spot for memory as well as cpu.
+        '''
         self._zero_state = {
             'id': 0, 'success': False,
-            'transitions': array('i', [-1] * 5), 'parent': None}
+            'transitions': array('i', [-1] * over_allocation), 'parent': None}
         self._finalized = False
         self._states = [self._zero_state]
         self._symbols = {}
         self._symbol_list = []
         self._case_insensitive = case_insensitive
+        self._over_allocation = over_allocation
 
     def add(self, keyword):
         '''
@@ -69,15 +82,18 @@ class KeywordTree:
         while idx < len(keyword):
             new_state = {
                 'id': len(self._states), 'success': False,
-                'transitions': array('i', [-1] * 5),
+                'transitions': array('i', [-1] * self._over_allocation),
                 'parent': current_state['id']}
             symbol = keyword[idx:idx + 1]
             if symbol not in self._symbols:
                 self._symbols[symbol] = len(self._symbols)
                 self._symbol_list.append(symbol)
             symbol_id = self._symbols[symbol]
-            while symbol_id >= len(current_state['transitions']):
-                current_state['transitions'].fromlist([-1] * 5)
+            if symbol_id >= len(current_state['transitions']):
+                current_state['transitions'].fromlist(
+                    [-1] * (symbol_id -
+                            len(current_state['transitions']) + 1 +
+                            self._over_allocation))
             current_state['transitions'][symbol_id] = len(self._states)
             self._states.append(new_state)
             current_state = new_state
@@ -147,6 +163,7 @@ class KeywordTree:
         tree['symbols'] = self._symbols
         tree['symbol_list'] = self._symbol_list
         tree['case_insensitive'] = self._case_insensitive
+        tree['over_allocation'] = self._over_allocation
         return tree
 
     def load(self, tree):
@@ -163,6 +180,7 @@ class KeywordTree:
         self._symbol_list = tree['symbol_list']
         self._symbols = tree['symbols']
         self._case_insensitive = tree['case_insensitive']
+        self._over_allocation = tree['over_allocation']
 
 
 class Finalizer:
@@ -195,8 +213,11 @@ class Finalizer:
                 if state_id is not None:
                     if len(state['transitions']) <= symbol_id or\
                             state['transitions'][symbol_id] < 0:
-                        while symbol_id >= len(state['transitions']):
-                            state['transitions'].fromlist([-1] * 5)
+                        if symbol_id >= len(state['transitions']):
+                            state['transitions'].fromlist(
+                                [-1] * (symbol_id -
+                                        len(state['transitions']) + 1 +
+                                        self._keyword_tree._over_allocation))
                         state['transitions'][symbol_id] = state_id
             traversing = self._states[traversing['longest_strict_suffix']]
 
