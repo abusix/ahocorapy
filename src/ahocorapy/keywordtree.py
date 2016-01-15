@@ -43,7 +43,7 @@ class KeywordTree:
 
     def add(self, keyword):
         '''
-        Add a keyword to the tree. 
+        Add a keyword to the tree.
         Can only be used before finalize() has been called.
         Keyword should be str or unicode.
         '''
@@ -67,6 +67,10 @@ class KeywordTree:
                 and current_state['transitions'][symbol_id] >= 0:
             next_state = self._states[current_state['transitions'][symbol_id]]
         while next_state is not None:
+            if next_state['success']:
+                # There is a keyword which is a prefix of the added keyword
+                # return here for performance
+                return
             current_state = next_state
             idx += 1
             next_state = None
