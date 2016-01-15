@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import unittest
-import re
-import pprint
 from ahocorapy.keywordtree import KeywordTree
+
+import msgpack
+import gzip
+import os
 
 
 class TestAhocorapy(unittest.TestCase):
@@ -116,6 +118,35 @@ class TestAhocorapy(unittest.TestCase):
 
         result = kwtree.search('BLISS')
         self.assertEqual(('blISs', 0), result)
+
+    def test_dump_and_load(self):
+        kwtree = KeywordTree(case_insensitive=True)
+        kwtree.add('bla')
+        kwtree.add('blue')
+        kwtree.add('blISs')
+        kwtree.finalize()
+
+        filename = 'kwtree_unittest.msgpack.gz'
+
+        dumped = kwtree.dump()
+        with gzip.open(filename, 'wb') as output_file:
+            msgpack.dump(dumped, output_file)
+
+        with gzip.open(filename, 'rb') as input_file:
+            loadedTree = msgpack.load(input_file)
+        kwtree2 = KeywordTree()
+        kwtree2.load(loadedTree)
+
+        result = kwtree2.search('bLa')
+        self.assertEqual(('bla', 0), result)
+
+        result = kwtree2.search('BLISS')
+        self.assertEqual(('blISs', 0), result)
+
+        try:
+            os.remove(filename)
+        except OSError:
+            pass
 
 
 if __name__ == '__main__':
