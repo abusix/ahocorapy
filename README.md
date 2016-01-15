@@ -32,6 +32,7 @@ The search method always returns the first keyword found, or None if there is no
 
 ```python
 result = kwtree.search('crossing on mallorca bella')
+print result
 ```
 
 Prints :
