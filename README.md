@@ -44,8 +44,10 @@ and not 'mallorca bella'. Since 'mallorca' is a strict prefix of it.
 ## Drawing Graph
 
 You can print the underlying graph with the Visualizer class.
+This feature requires a working pygraphviz library installed.
 
 ```python
+from ahocorapy.visualizer import Visualizer
 visualizer = Visualizer()
 visualizer.draw('readme_example.png', kwtree)
 ```
