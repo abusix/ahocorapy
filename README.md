@@ -27,3 +27,29 @@ Prints :
 ```python
 ('malaga', 24)
 ```
+
+The search method always returns the first keyword found, or None if there is none.
+
+```python
+result = kwtree.search('crossing on mallorca bella')
+```
+
+Prints :
+```python
+('mallorca', 12)
+```
+and not 'mallorca bella'. Since 'mallorca' is a strict prefix of it.
+
+## DFA
+
+You can print the underlying graph with the Visualizer class.
+
+```python
+visualizer = Visualizer()
+visualizer.draw('readme_example.png', kwtree)
+```
+
+The resulting .png of the graph looks like this: 
+
+![graph for kwtree](img/readme_example.png "Keyword Tree")
+
