@@ -6,3 +6,5 @@
 ahocorapy.egg-info/
 build/
 dist/
+*.prof
+*.lprof
