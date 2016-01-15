@@ -7,23 +7,23 @@ Given a list of keywords one can check if at least one of the keywords exist in 
 
 ### Creation of the Search Tree
 
-'''python
+```python
 kwtree = KeywordTree(case_insensitive=True)
 kwtree.add('malaga')
 kwtree.add('lacrosse')
 kwtree.add('mallorca')
 kwtree.add('mallorca bella')
 kwtree.finalize()
-'''
+```
 
 ### Searching
 
-'''python
+```python
 result = kwtree.search('My favorite islands are malaga and sylt.')
 print result
-'''
+```
 
 Prints :
-'''python
+```python
 ('malaga', 24)
-'''
+```
