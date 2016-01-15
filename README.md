@@ -40,7 +40,7 @@ Prints :
 ```
 and not 'mallorca bella'. Since 'mallorca' is a strict prefix of it.
 
-## DFA
+## Drawing Graph
 
 You can print the underlying graph with the Visualizer class.
 
