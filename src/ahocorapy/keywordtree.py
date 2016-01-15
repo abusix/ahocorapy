@@ -210,7 +210,7 @@ class Finalizer:
         traversing = self._states[state['longest_strict_suffix']]
         while traversing['id'] > 0:
             for symbol_id, state_id in enumerate(traversing['transitions']):
-                if state_id is not None:
+                if state_id >= 0:
                     if len(state['transitions']) <= symbol_id or\
                             state['transitions'][symbol_id] < 0:
                         if symbol_id >= len(state['transitions']):
