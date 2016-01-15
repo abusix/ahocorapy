@@ -199,7 +199,7 @@ class Finalizer:
         self.search_longest_strict_suffixes_for_children(zero_state)
         shortcut = self.shortcut_suffix_search
         for state in self._states:
-            if state['id'] > 0:
+            if state['id'] > 0 and not state['success']:
                 shortcut(state)
         # Remove to save space
         for state in self._states:
