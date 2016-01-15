@@ -20,7 +20,8 @@ class KeywordTree:
 
     def __init__(self, case_insensitive=False):
         self._zero_state = {
-            'id': 0, 'success': False, 'transitions': array('i', [-1] * 5), 'parent': None}
+            'id': 0, 'success': False,
+            'transitions': array('i', [-1] * 5), 'parent': None}
         self._finalized = False
         self._states = [self._zero_state]
         self._symbols = {}
@@ -28,6 +29,11 @@ class KeywordTree:
         self._case_insensitive = case_insensitive
 
     def add(self, keyword):
+        '''
+        Add a keyword to the tree. 
+        Can only be used before finalize() has been called.
+        Keyword should be str or unicode.
+        '''
         if self._finalized:
             raise ValueError('KeywordTree has been finalized.' +
                              ' No more keyword additions allowed')
@@ -80,6 +86,14 @@ class KeywordTree:
         current_state['matched_keyword'] = original_keyword
 
     def search(self, text):
+        '''
+        Search a text for any occurence of a keyword.
+        Returns when one keyword has been found.
+        Can only be called after finalized() has been called.
+        O(n) with n = len(text)
+        @return: 2-Tuple with keyword and startindex in text.
+                 Or None if no keyword was found in the text.
+        '''
         if not self._finalized:
             raise ValueError('KeywordTree has not been finalized.' +
                              ' No search allowed. Call finalize() first.')
@@ -104,6 +118,10 @@ class KeywordTree:
                 current_state = self._zero_state
 
     def finalize(self):
+        '''
+        Needs to be called after all keywords have been added and
+        before any searching is performed.
+        '''
         if self._finalized:
             raise ValueError('KeywordTree has already been finalized.')
         finalizer = Finalizer(self)
