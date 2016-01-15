@@ -211,12 +211,13 @@ class Finalizer:
         while traversing['id'] > 0:
             for symbol_id, state_id in enumerate(traversing['transitions']):
                 if state_id >= 0:
-                    if len(state['transitions']) <= symbol_id or\
+                    len_trans = len(state['transitions'])
+                    if len_trans <= symbol_id or\
                             state['transitions'][symbol_id] < 0:
-                        if symbol_id >= len(state['transitions']):
+                        if symbol_id >= len_trans:
                             state['transitions'].fromlist(
                                 [-1] * (symbol_id -
-                                        len(state['transitions']) + 1 +
+                                        len_trans + 1 +
                                         self._keyword_tree._over_allocation))
                         state['transitions'][symbol_id] = state_id
             traversing = self._states[traversing['longest_strict_suffix']]
