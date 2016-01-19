@@ -1,0 +1,17 @@
+image: docker.abusix.local/jessie-amd64-abusix-ci-python
+
+before_script:
+  - npm install pytest-cov
+
+stages:
+  - test
+
+test1:
+  stage: test
+  script:
+    - py.test --cov=src/ahocorapy/keywordtree.py tests/ahocorapy_test.py
+  only:
+    - master
+  tags:
+    - docker
+

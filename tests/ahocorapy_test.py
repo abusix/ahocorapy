@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import unittest
 from ahocorapy.keywordtree import KeywordTree
-from ahocorapy.visualizer import Visualizer
 
 import msgpack
 import gzip
@@ -55,9 +54,6 @@ class TestAhocorapy(unittest.TestCase):
 
         result = kwtree.search('crossing on mallorca bella')
         self.assertEqual(('mallorca', 12), result)
-
-        visualizer = Visualizer()
-        visualizer.draw('readme_example.png', kwtree)
 
     def test_suffix_stuff(self):
         kwtree = KeywordTree()
