@@ -1,25 +1,11 @@
 image: docker.abusix.local/jessie-amd64-abusix-ci-python
 
-  - pip install pytest-cov
-
 stages:
-  - init
-  - install
   - test
-
-init1:
-  stage: init
-  script:
-    - virtualenv --no-site-packages VIRTUAL
-    - source VIRTUAL/bin/activate
-    - pip install pytest-cov
-
-install1:
-  stage: install
-  script:
-    - python setup.py install
 
 test1:
   stage: test
   script:
+    - pip install pytest-cov
+    - python setup.py install
     - py.test --cov=src/ahocorapy/keywordtree.py tests/ahocorapy_test.py
