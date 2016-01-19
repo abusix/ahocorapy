@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from ahocorapy.keywordtree import KeywordTree
-from ahocorapy.visualizer import Visualizer
+from ahocorapy_visualizer.visualizer import Visualizer
 
 
 class TestAhocorapyVisualizer(unittest.TestCase):
