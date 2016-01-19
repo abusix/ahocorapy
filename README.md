@@ -3,6 +3,7 @@
 ahocorapy is a pure python implementation of the Aho-Corasick Algorithm.
 Given a list of keywords one can check if at least one of the keywords exist in a given text in linear time.
 
+
 ## Basic Usage:
 
 ### Creation of the Search Tree
