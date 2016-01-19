@@ -1,7 +1,7 @@
 image: docker.abusix.local/jessie-amd64-abusix-ci-python
 
 before_script:
-  - npm install pytest-cov
+  - pip install pytest-cov
 
 stages:
   - test
