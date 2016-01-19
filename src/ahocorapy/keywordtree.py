@@ -14,6 +14,7 @@ Created on Jan 5, 2016
 '''
 
 from array import array
+import json
 
 
 class KeywordTree:
@@ -153,7 +154,7 @@ class KeywordTree:
         return "ahocorapy KeywordTree with %i states." % len(self._states)
 
     def __repr__(self):
-        return self.dump()
+        return json.dumps(self.dump())
 
     def dump(self):
         tree = {}

@@ -174,6 +174,36 @@ class TestAhocorapy(unittest.TestCase):
         except OSError:
             pass
 
+    def test_utility_calls(self):
+        kwtree = KeywordTree(case_insensitive=True)
+        kwtree.add('bla')
+        kwtree.add('blue')
+        kwtree.finalize()
+        # Just test that there are no errors
+        rep = repr(kwtree)
+        self.assertGreater(len(rep), 0)
+        tostring = str(kwtree)
+        self.assertGreater(tostring, 0)
+
+    def test_finalize_errors(self):
+        kwtree = KeywordTree(case_insensitive=True)
+        kwtree.add('bla')
+        kwtree.add('blue')
+
+        self.assertRaises(ValueError, kwtree.search, 'blueb')
+
+        kwtree = KeywordTree(case_insensitive=True)
+        kwtree.add('bla')
+        kwtree.finalize()
+
+        self.assertRaises(ValueError, kwtree.add, 'blueb')
+
+        kwtree = KeywordTree(case_insensitive=True)
+        kwtree.add('bla')
+        kwtree.finalize()
+
+        self.assertRaises(ValueError, kwtree.finalize)
+
 
 if __name__ == '__main__':
     unittest.main()
