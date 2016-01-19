@@ -4,14 +4,15 @@ before_script:
   - pip install pytest-cov
 
 stages:
+  - install
   - test
+
+install1:
+  stage: install
+  script:
+    - python setup.py install
 
 test1:
   stage: test
   script:
     - py.test --cov=src/ahocorapy/keywordtree.py tests/ahocorapy_test.py
-  only:
-    - master
-  tags:
-    - docker
-
