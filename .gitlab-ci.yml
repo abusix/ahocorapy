@@ -1,11 +1,12 @@
-image: docker.abusix.local/jessie-amd64-abusix-ci-python
+image: python:2.7-alpine
 
 stages:
   - test
 
-test1:
+test:
   stage: test
   script:
     - pip install pytest-cov msgpack-python
     - python setup.py develop
     - py.test --cov=src/ahocorapy/ tests/ahocorapy_test.py
+
