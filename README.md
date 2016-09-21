@@ -1,3 +1,6 @@
+[![build status](https://gitlab.com/abusix/ahocorapy/badges/master/build.svg)](https://gitlab.com/abusix/ahocorapy/commits/master)
+[![coverage report](https://gitlab.com/abusix/ahocorapy/badges/master/coverage.svg)](https://gitlab.com/abusix/ahocorapy/commits/master)
+
 # ahocorapy - Fast Many-Keyword Search in Pure Python
 
 ahocorapy is a pure python implementation of the Aho-Corasick Algorithm.
