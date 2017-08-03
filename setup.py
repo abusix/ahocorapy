@@ -18,7 +18,7 @@ setup(
     name='ahocorapy',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=[],
+    install_requires=['future'],
     url='http://www.abusix.com/',
     version=__version__
 )
