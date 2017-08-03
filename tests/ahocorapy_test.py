@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from builtins import str
 import unittest
 from ahocorapy.keywordtree import KeywordTree
 
@@ -152,10 +153,10 @@ class TestAhocorapy(unittest.TestCase):
 
         dumped = kwtree.dump()
         with gzip.open(filename, 'wb') as output_file:
-            msgpack.dump(dumped, output_file)
+            msgpack.dump(dumped, output_file, use_bin_type=True)
 
         with gzip.open(filename, 'rb') as input_file:
-            loadedTree = msgpack.load(input_file)
+            loadedTree = msgpack.load(input_file, encoding='utf-8')
         kwtree2 = KeywordTree()
         kwtree2.load(loadedTree)
 
@@ -179,7 +180,7 @@ class TestAhocorapy(unittest.TestCase):
         rep = repr(kwtree)
         self.assertGreater(len(rep), 0)
         tostring = str(kwtree)
-        self.assertGreater(tostring, 0)
+        self.assertGreater(len(tostring), 0)
 
     def test_finalize_errors(self):
         kwtree = KeywordTree(case_insensitive=True)

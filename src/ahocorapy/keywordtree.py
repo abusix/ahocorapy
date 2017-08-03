@@ -13,11 +13,12 @@ Created on Jan 5, 2016
 @author: Frederik Petersen (fp@abusix.com)
 '''
 
+from builtins import object
 from array import array
 import json
 
 
-class KeywordTree:
+class KeywordTree(object):
 
     def __init__(self, case_insensitive=False,
                  over_allocation=2):
@@ -189,7 +190,7 @@ class KeywordTree:
         self._over_allocation = tree['over_allocation']
 
 
-class Finalizer:
+class Finalizer(object):
 
     def __init__(self, keyword_tree):
         self._keyword_tree = keyword_tree

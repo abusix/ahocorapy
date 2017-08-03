@@ -1,7 +1,9 @@
+from builtins import str
+from builtins import object
 import pygraphviz as pgv
 
 
-class Visualizer:
+class Visualizer(object):
 
     def __init__(self):
         self._added = set()
