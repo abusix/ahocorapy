@@ -29,26 +29,12 @@ test-py33:
     - pip install tox
     - tox -e py33
 
-test-py32:
-  image: python:3.2-alpine
-  stage: test
-  script:
-    - pip install tox
-    - tox -e py32
-
 test-py27:
   image: python:2.7-alpine
   stage: test
   script:
     - pip install tox
     - tox -e py27
-
-test-py26:
-  image: python:2.6-alpine
-  stage: test
-  script:
-    - pip install tox
-    - tox -e py26
 
 test-pypy:
   image: pypy:slim
@@ -61,5 +47,6 @@ test-jython:
   image: mcandre/docker-jython
   stage: test
   script:
+    - jython -m ensurepip
     - pip install tox
     - tox -e jython
