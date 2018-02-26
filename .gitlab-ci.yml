@@ -37,16 +37,15 @@ test-py27:
     - tox -e py27
 
 test-pypy:
-  image: pypy:slim
+  image: pypy:2-slim
   stage: test
   script:
     - pip install tox
     - tox -e pypy
 
-test-jython:
-  image: mcandre/docker-jython
+test-pypy3:
+  image: pypy:3-slim
   stage: test
   script:
-    - jython -m ensurepip
     - pip install tox
-    - tox -e jython
+    - tox -e pypy3
