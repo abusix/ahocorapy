@@ -51,14 +51,14 @@ test-py26:
     - tox -e py26
 
 test-pypy:
-  image: jamiehewland/alpine-pypy
+  image: pypy:slim
   stage: test
   script:
     - pip install tox
     - tox -e pypy
 
 test-jython:
-  image: docker pull mcandre/docker-jython
+  image: mcandre/docker-jython
   stage: test
   script:
     - pip install tox
