@@ -9,3 +9,5 @@ dist/
 *.prof
 *.lprof
 .coverage
+.tox
+
