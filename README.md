@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/abusix/ahocorapy.svg?branch=master)](https://travis-ci.org/abusix/ahocorapy)
+[![PyPi](https://img.shields.io/pypi/v/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
 
 # ahocorapy - Fast Many-Keyword Search in Pure Python
 
