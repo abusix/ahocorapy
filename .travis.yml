@@ -1,4 +1,5 @@
 language: python
+
 python:
   - "2.6"
   - "2.7"
@@ -6,9 +7,12 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-# command to install dependencies
+  - "pypy2.7"
+  - "pypy3.5"
+
 install:
-  - pip install tox-travis
-# command to run tests
+  - pip install pytest-cov msgpack-python
+  - pip install -e .
+  
 script:
-  - tox # or py.test for Python versions 3.5 and below
+  - py.test --cov=src/ahocorapy/ tests/ahocorapy_test.py
