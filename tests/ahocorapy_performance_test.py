@@ -10,7 +10,7 @@ import ahocorasick
 SEARCH_ITERATIONS = 100
 
 
-with open('tests/data/domains.txt') as keyword_file:
+with open('tests/data/names.txt') as keyword_file:
     keyword_list = list(map(str.strip, keyword_file.readlines()))
 
 with open('tests/data/textblob.txt') as keyword_file:
@@ -30,11 +30,11 @@ def search_ahocorapy(ahocorapy_tree, textblob):
 
 ahocorapy_tree = init_ahocorapy()
 result = search_ahocorapy(ahocorapy_tree, textblob)
-assert result == 'peterchen@example.org'
+assert result == 'Dawn Higgins'
   
 print('setup_ahocorapy: ' + str(timeit(stmt='init_ahocorapy()', number=1, globals=globals())))
 print('search_ahocorapy: ' + str(timeit(stmt='search_ahocorapy(ahocorapy_tree, textblob)', number=SEARCH_ITERATIONS, globals=globals())))
-    
+     
 print('-'*10 + 'pyahocorasick' + '-'*10)
 def init_ahocorasick():
     A = ahocorasick.Automaton()
@@ -42,36 +42,36 @@ def init_ahocorasick():
         A.add_word(keyword, keyword)
     A.make_automaton()
     return A
-  
+   
 def search_ahocorasick(ahocorasick_tree, textblob):
     result = ''
     for _, keyword in ahocorasick_tree.iter(textblob):
         result += keyword
     return keyword
-  
-  
+   
+   
 ahocorasick_tree = init_ahocorasick()
 result = search_ahocorasick(ahocorasick_tree, textblob)
-assert result == 'peterchen@example.org'
-  
+assert result == 'Dawn Higgins'
+   
 print('setup_pyahocorasick: ' + str(timeit(stmt='init_ahocorasick()', number=1, globals=globals())))
 print('search_pyahocorasick: ' + str(timeit(stmt='search_ahocorasick(ahocorasick_tree, textblob)', number=SEARCH_ITERATIONS, globals=globals())))
-  
-  
+   
+   
 print('-'*10 + 'py_aho_corasick' + '-'*10)
 def init_py_aho_corasick():
     return py_aho_corasick.Automaton(keyword_list)
-  
+   
 def search_py_aho_corasick(py_aho_corasick_tree, textblob):
     result = ''
     for match in py_aho_corasick_tree.get_keywords_found(textblob):
         result += match[1]
     return result
-  
+   
 py_aho_corasick_tree = init_py_aho_corasick()
 result = search_py_aho_corasick(py_aho_corasick_tree, textblob)
-assert result == 'peterchen@example.org'
-  
+assert result == 'dawn higgins'
+   
 print('setup_py_aho_corasick: ' + str(timeit(stmt='init_py_aho_corasick()', number=1, globals=globals())))
-  
+   
 print('search_py_aho_corasick: ' + str(timeit(stmt='search_py_aho_corasick(py_aho_corasick_tree, textblob)', number=SEARCH_ITERATIONS, globals=globals())))
