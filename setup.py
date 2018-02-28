@@ -12,7 +12,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open('%s/VERSION' % here) as f:
     __version__ = f.readline().strip()
 
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(path.join(here, 'README.md')) as f:
     long_description = f.read()
 
 setup(
