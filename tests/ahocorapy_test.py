@@ -58,13 +58,17 @@ class TestAhocorapy(unittest.TestCase):
 
     def test_suffix_stuff(self):
         kwtree = KeywordTree()
-        kwtree.add('blaaaaa')
-        kwtree.add('blue')
+        kwtree.add('blaaaaaf')
+        kwtree.add('bluez')
         kwtree.add('aaaamen')
+        kwtree.add('uebergaaat')
         kwtree.finalize()
 
-        result = kwtree.search('shfohdfaaaaaamenbla')
-        self.assertEqual(('aaaamen', 9), result)
+        result = kwtree.search('blaaaaamentada')
+        self.assertEqual(('aaaamen', 3), result)
+        
+        result = kwtree.search('clueuebergaaameblaaaamenbluez')
+        self.assertEqual(('aaaamen', 17), result)
 
     def test_simple(self):
         kwtree = KeywordTree()
@@ -86,6 +90,16 @@ class TestAhocorapy(unittest.TestCase):
 
         result = kwtree.search('red green blue grey')
         self.assertEqual(('blue', 10), result)
+
+    def test_simple_back_to_zero_state_example(self):
+        kwtree = KeywordTree()
+        keyword_list = ['ab', 'bca']
+        for keyword in keyword_list:
+            kwtree.add(keyword)
+        kwtree.finalize()
+
+        result = kwtree.search('blbabca')
+        self.assertEqual(('ab', 3), result)
 
     def test_domains(self):
         kwtree = KeywordTree()

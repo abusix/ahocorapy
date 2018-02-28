@@ -42,7 +42,7 @@ class KeywordTree(object):
         self._symbol_list = []
         self._case_insensitive = case_insensitive
         self._over_allocation = over_allocation
-
+    
     def add(self, keyword):
         '''
         Add a keyword to the tree.
@@ -60,7 +60,7 @@ class KeywordTree(object):
         current_state = self._zero_state
         idx = 0
         next_state = None
-        symbol = keyword[idx:idx + 1]
+        symbol = keyword[idx]
         if symbol not in self._symbols:
             self._symbols[symbol] = len(self._symbols)
             self._symbol_list.append(symbol)
@@ -69,14 +69,14 @@ class KeywordTree(object):
                 and current_state['transitions'][symbol_id] >= 0:
             next_state = self._states[current_state['transitions'][symbol_id]]
         while next_state is not None:
-            if next_state['success']:
+            idx += 1
+            if next_state['success'] or idx>=len(keyword):
                 # There is a keyword which is a prefix of the added keyword
                 # return here for performance
                 return
             current_state = next_state
-            idx += 1
             next_state = None
-            symbol = keyword[idx:idx + 1]
+            symbol = keyword[idx]
             if symbol not in self._symbols:
                 self._symbols[symbol] = len(self._symbols)
                 self._symbol_list.append(symbol)
@@ -90,7 +90,7 @@ class KeywordTree(object):
                 'id': len(self._states), 'success': False,
                 'transitions': array('i', [-1] * self._over_allocation),
                 'parent': current_state['id']}
-            symbol = keyword[idx:idx + 1]
+            symbol = keyword[idx]
             if symbol not in self._symbols:
                 self._symbols[symbol] = len(self._symbols)
                 self._symbol_list.append(symbol)
@@ -139,6 +139,13 @@ class KeywordTree(object):
                     return (keyword, idx + 1 - len(keyword))
             else:
                 current_state = self._zero_state
+                if len(current_state['transitions']) > symbol_id and\
+                    current_state['transitions'][symbol_id] >= 0:
+                    current_state = self._states[
+                        current_state['transitions'][symbol_id]]
+                    if current_state['success']:
+                        keyword = current_state['matched_keyword']
+                        return (keyword, idx + 1 - len(keyword))
 
     def finalize(self):
         '''
@@ -146,7 +153,7 @@ class KeywordTree(object):
         before any searching is performed.
         '''
         if self._finalized:
-            raise ValueError('KeywordTree has already been finalized.')
+            raise ValueError('KeywordTree has already been finalized.')   
         finalizer = Finalizer(self)
         finalizer.finalize()
         self._finalized = True
@@ -198,7 +205,7 @@ class Finalizer(object):
 
     def finalize(self):
         zero_state = self._keyword_tree._zero_state
-        zero_state['longest_strict_suffix'] = None
+        zero_state['longest_strict_suffix'] = 0
         self.search_longest_strict_suffixes_for_children(zero_state)
         shortcut = self.shortcut_suffix_search
         for state in self._states:
@@ -244,27 +251,25 @@ class Finalizer(object):
     def search_longest_strict_suffix(self, state, symbol_id):
         if 'longest_strict_suffix' not in state:
             parent = self._states[state['parent']]
-            if parent['id'] == 0:
-                state['longest_strict_suffix'] = 0
-            else:
-                found_suffix = False
-                if 'longest_strict_suffix' not in parent:
-                    # Has not been done yet. Do early
-                    self.search_longest_strict_suffix(parent, symbol_id)
-                traversed = self._states[parent['longest_strict_suffix']]
-                while not found_suffix:
-                    if len(traversed['transitions']) > symbol_id\
-                            and traversed['transitions'][symbol_id] >= 0:
-                        state['longest_strict_suffix'] = traversed[
-                            'transitions'][symbol_id]
-                        found_suffix = True
-                    elif traversed['id'] == 0:
-                        state['longest_strict_suffix'] = 0
-                        found_suffix = True
-                    else:
-                        if 'longest_strict_suffix' not in traversed:
-                            # Has not been done yet. Do early
-                            self.search_longest_strict_suffix(
-                                traversed, symbol_id)
-                        traversed = self._states[
-                            traversed['longest_strict_suffix']]
+            found_suffix = False
+            if 'longest_strict_suffix' not in parent:
+                # Has not been done yet. Do early
+                self.search_longest_strict_suffix(parent, [ingoing_symbol_id for ingoing_symbol_id, ingoing_state_id in enumerate(parent['transitions']) if ingoing_state_id == state['id']][0])
+            traversed = self._states[parent['longest_strict_suffix']]
+            while not found_suffix:
+                if len(traversed['transitions']) > symbol_id\
+                        and traversed['transitions'][symbol_id] >= 0\
+                        and traversed['transitions'][symbol_id] != state['id']:
+                    state['longest_strict_suffix'] = traversed[
+                        'transitions'][symbol_id]
+                    found_suffix = True
+                elif traversed['id'] == 0:
+                    state['longest_strict_suffix'] = 0
+                    found_suffix = True
+                else:
+                    if 'longest_strict_suffix' not in traversed:
+                        # Has not been done yet. Do early
+                        self.search_longest_strict_suffix(traversed, symbol_id)
+
+                    traversed = self._states[
+                        traversed['longest_strict_suffix']]
