@@ -30,6 +30,8 @@ that our lookup is fast while, the setup takes longer. During set up we go throu
 follow simple transitions and don't have to perform any additional suffix lookup. It also leads to a bigger memory footprint,
 because the number of transitions is higher, because they are all included explicitely and not implicitely hidden by suffix pointers.
 
+- We added a small tool that helps you visualize the resulting graph. This may help understanding the algorithm, if you'd like. See below.
+
 ### Performance
 
 I compared the two libraries mentioned above with ahocorapy. We used 50,000 keywords long list and an input text of ~34199k characters.

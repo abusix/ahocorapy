@@ -130,19 +130,19 @@ class KeywordTree(object):
                 # Not known in keyword alphabet. Go back to zero
                 current_state = self._zero_state
                 continue
-            
-            transitions = current_state['transitions']
-            if len(transitions) > symbol_id and\
-                    transitions[symbol_id] >= 0:
-                current_state = self._states[transitions[symbol_id]]
+            if len(current_state['transitions']) > symbol_id and\
+                    current_state['transitions'][symbol_id] >= 0:
+                current_state = self._states[
+                    current_state['transitions'][symbol_id]]
                 if current_state['success']:
                     keyword = current_state['matched_keyword']
                     return (keyword, idx + 1 - len(keyword))
             else:
                 current_state = self._zero_state
-                if len(transitions) > symbol_id and\
-                    transitions[symbol_id] >= 0:
-                    current_state = self._states[transitions[symbol_id]]
+                if len(current_state['transitions']) > symbol_id and\
+                    current_state['transitions'][symbol_id] >= 0:
+                    current_state = self._states[
+                        current_state['transitions'][symbol_id]]
                     if current_state['success']:
                         keyword = current_state['matched_keyword']
                         return (keyword, idx + 1 - len(keyword))
