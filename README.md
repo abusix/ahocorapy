@@ -36,7 +36,7 @@ because the number of transitions is higher, because they are all included expli
 
 ### Performance
 
-I compared the two libraries mentioned above with ahocorapy. We used 50,000 keywords long list and an input text of ~34199k characters.
+I compared the two libraries mentioned above with ahocorapy. We used 50,000 keywords long list and an input text of 34,199 characters.
 In the text only one keyword of the list is contained.
 The setup process was run once per library and the setup process was run 100 times. The following results are in seconds (not averaged for the lookup).
 
