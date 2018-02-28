@@ -14,7 +14,9 @@ We started working on this in the beginning of 2016. Our requirements included u
 was impossible with C-extension based libraries (like [pyahocorasick](https://github.com/WojciechMula/pyahocorasick/)). Pure 
 python libraries were very slow or unusable due to memory explosion. Since then another pure python library was released 
 [py-aho-corasick](https://github.com/JanFan/py-aho-corasick). The repository also contains some discussion about different
-implementations.
+implementations. 
+There is also [acora](https://github.com/scoder/acora), but it includes the note ('current construction algorithm is not 
+suitable for really large sets of keywords') which really was the case the last time I tested, because RAM ran out quickly.
 
 ### Differences
 

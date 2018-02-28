@@ -1,6 +1,5 @@
 stages:
   - test
-  - performance
 
 test-py36:
   image: python:3.6-alpine
@@ -50,19 +49,3 @@ test-pypy3:
   script:
     - pip install tox
     - tox -e pypy3
-
-performance-py36:
-  image: python:3.6-alpine
-  stage: performance
-  script:
-    - pip install pyahocorasick py_aho_corasick
-    - pip install .
-    - python tests/ahocorapy_performance_test.py
-
-performance-pypy:
-  image: pypy:2-slim
-  stage: performance
-  script:
-    - pip install pyahocorasick py_aho_corasick
-    - pip install .   
-    - python tests/ahocorapy_performance_test.py
