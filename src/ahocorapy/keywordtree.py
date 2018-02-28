@@ -215,8 +215,6 @@ class Finalizer(object):
             # Remove since we only need one result
             if state['success']:
                 del state['transitions']
-            if 'len_trans' in state:
-                del state['len_trans']
 
     def search_longest_strict_suffixes_for_children(self, state):
         processed = set()
@@ -256,17 +254,12 @@ class Finalizer(object):
                     traversed = self._states[
                         traversed['longest_strict_suffix']]
             if state['longest_strict_suffix'] > 0:
-                for symbol_id, state_id in enumerate(self._states[state['longest_strict_suffix']]['transitions']):
-                    if state_id >= 0:
-                        if 'len_trans' not in state:
-                            state['len_trans'] = len(state['transitions'])
-                        len_trans = state['len_trans']
-                        if symbol_id >= len_trans:
-                            state['transitions'].fromlist(
-                                [-1] * (symbol_id -
-                                        len_trans + 1 +
-                                        self._keyword_tree._over_allocation))
-                            state['len_trans'] = len(state['transitions'])
-                            state['transitions'][symbol_id] = state_id
-                        elif state['transitions'][symbol_id] < 0:
+                suffix_trans = self._states[state['longest_strict_suffix']]['transitions']
+                suffix_trans_len = len(suffix_trans)
+                if suffix_trans_len > len(state['transitions']):
+                    state['transitions'].fromlist(
+                                    [-1] * (suffix_trans_len +
+                                            self._keyword_tree._over_allocation))
+                for symbol_id, state_id in enumerate(suffix_trans):
+                    if state_id >= 0 and state['transitions'][symbol_id] < 0:
                             state['transitions'][symbol_id] = state_id
