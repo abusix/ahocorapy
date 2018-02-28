@@ -1,5 +1,4 @@
-[![build status](https://gitlab.com/evprocessing/ahocorapy/badges/master/build.svg)](https://gitlab.com/evprocessing/ahocorapy/commits/master)
-[![coverage report](https://gitlab.com/evprocessing/ahocorapy/badges/master/coverage.svg)](https://gitlab.com/evprocessing/ahocorapy/commits/master)
+[![Build Status](https://travis-ci.org/abusix/ahocorapy.svg?branch=master)](https://travis-ci.org/abusix/ahocorapy)
 
 # ahocorapy - Fast Many-Keyword Search in Pure Python
 
