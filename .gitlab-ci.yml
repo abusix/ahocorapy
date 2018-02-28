@@ -55,12 +55,14 @@ performance-py36:
   image: python:3.6-alpine
   stage: performance
   script:
+    - pip install pyahocorasick py_aho_corasick
     - pip install .
-    - python python tests/ahocorapy_performance_test.py
+    - python tests/ahocorapy_performance_test.py
 
 performance-pypy:
   image: pypy:2-slim
   stage: performance
   script:
+    - pip install pyahocorasick py_aho_corasick
     - pip install .   
-    - python python tests/ahocorapy_performance_test.py
+    - python tests/ahocorapy_performance_test.py
