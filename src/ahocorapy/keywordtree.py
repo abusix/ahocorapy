@@ -207,10 +207,6 @@ class Finalizer(object):
         zero_state = self._keyword_tree._zero_state
         zero_state['longest_strict_suffix'] = 0
         self.search_longest_strict_suffixes_for_children(zero_state)
-        shortcut = self.shortcut_suffix_search
-        for state in self._states:
-            if state['id'] > 0 and not state['success']:
-                shortcut(state)
         # Remove to save space
         for state in self._states:
             # Only needed during finalize
@@ -222,31 +218,17 @@ class Finalizer(object):
             if 'len_trans' in state:
                 del state['len_trans']
 
-    def shortcut_suffix_search(self, state):
-        traversing = self._states[state['longest_strict_suffix']]
-        while traversing['id'] > 0:
-            for symbol_id, state_id in enumerate(traversing['transitions']):
-                if state_id >= 0:
-                    if 'len_trans' not in state:
-                        state['len_trans'] = len(state['transitions'])
-                    len_trans = state['len_trans']
-                    if len_trans <= symbol_id or\
-                            state['transitions'][symbol_id] < 0:
-                        if symbol_id >= len_trans:
-                            state['transitions'].fromlist(
-                                [-1] * (symbol_id -
-                                        len_trans + 1 +
-                                        self._keyword_tree._over_allocation))
-                            state['len_trans'] = len(state['transitions'])
-                        state['transitions'][symbol_id] = state_id
-            traversing = self._states[traversing['longest_strict_suffix']]
-
     def search_longest_strict_suffixes_for_children(self, state):
-        for symbol_id, childid in enumerate(state['transitions']):
-            if childid >= 0:
-                child = self._states[childid]
-                self.search_longest_strict_suffix(child, symbol_id)
-                self.search_longest_strict_suffixes_for_children(child)
+        processed = set()
+        to_process = [state]
+        while to_process:
+            state_to_process = to_process.pop()
+            processed.add(state_to_process['id'])
+            for symbol_id, childid in enumerate(state_to_process['transitions']):
+                if childid >= 0 and childid not in processed:
+                    child = self._states[childid]
+                    self.search_longest_strict_suffix(child, symbol_id)
+                    to_process.append(child)
 
     def search_longest_strict_suffix(self, state, symbol_id):
         if 'longest_strict_suffix' not in state:
@@ -273,3 +255,18 @@ class Finalizer(object):
 
                     traversed = self._states[
                         traversed['longest_strict_suffix']]
+            if state['longest_strict_suffix'] > 0:
+                for symbol_id, state_id in enumerate(self._states[state['longest_strict_suffix']]['transitions']):
+                    if state_id >= 0:
+                        if 'len_trans' not in state:
+                            state['len_trans'] = len(state['transitions'])
+                        len_trans = state['len_trans']
+                        if symbol_id >= len_trans:
+                            state['transitions'].fromlist(
+                                [-1] * (symbol_id -
+                                        len_trans + 1 +
+                                        self._keyword_tree._over_allocation))
+                            state['len_trans'] = len(state['transitions'])
+                            state['transitions'][symbol_id] = state_id
+                        elif state['transitions'][symbol_id] < 0:
+                            state['transitions'][symbol_id] = state_id
