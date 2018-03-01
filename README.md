@@ -49,14 +49,14 @@ These are the results:
 
 ```
 ----------ahocorapy----------
-setup_ahocorapy: 2.756227495003259
-search_ahocorapy: 2.2842286950035486
+setup_ahocorapy: 5.460791023999263
+search_ahocorapy: 1.9325687669988838
 ----------pyahocorasick----------
-setup_pyahocorasick: 0.12347752699861303
-search_pyahocorasick: 0.06832410101196729
+setup_pyahocorasick: 0.10431620100098371
+search_pyahocorasick: 0.06413857900042785
 ----------py_aho_corasick----------
-setup_py_aho_corasick: 2.372840342024574
-search_py_aho_corasick: 16.12931612698594
+setup_py_aho_corasick: 1.9095220560011512
+search_py_aho_corasick: 14.320285862000674
 ```
 
 As expected the C-Extension shatters the pure python implementations. Even though there is probably still room for optimization in

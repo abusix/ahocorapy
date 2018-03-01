@@ -70,6 +70,24 @@ class TestAhocorapy(unittest.TestCase):
         result = kwtree.search('clueuebergaaameblaaaamenbluez')
         self.assertEqual(('aaaamen', 17), result)
 
+    def test_text_end_situation(self):
+        kwtree = KeywordTree()
+        kwtree.add('blaaaaaf')
+        kwtree.add('a')
+        kwtree.finalize()
+
+        result = kwtree.search('bla')
+        self.assertEqual(('a', 2), result)
+
+    def test_text_end_situation_2(self):
+        kwtree = KeywordTree()
+        kwtree.add('blaaaaaf')
+        kwtree.add('la')
+        kwtree.finalize()
+
+        result = kwtree.search('bla')
+        self.assertEqual(('la', 1), result)
+
     def test_simple(self):
         kwtree = KeywordTree()
         kwtree.add('bla')
@@ -214,6 +232,21 @@ class TestAhocorapy(unittest.TestCase):
         kwtree.finalize()
 
         self.assertRaises(ValueError, kwtree.finalize)
+
+    def test_many_keywords(self):
+        kwtree = KeywordTree(case_insensitive=True)
+        with open('tests/data/names.txt') as keyword_file:
+            keyword_list = list(map(str.strip, keyword_file.readlines()))
+
+        for kw in keyword_list:
+            kwtree.add(kw)
+
+        kwtree.finalize()
+        with open('tests/data/textblob.txt') as keyword_file:
+            textblob = keyword_file.read()
+
+        result = kwtree.search(textblob)
+        self.assertEqual(('Dawn Higgins', 34153), result)
 
 
 if __name__ == '__main__':

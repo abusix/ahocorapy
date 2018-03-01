@@ -137,15 +137,6 @@ class KeywordTree(object):
                 if current_state['success']:
                     keyword = current_state['matched_keyword']
                     return (keyword, idx + 1 - len(keyword))
-            else:
-                current_state = self._zero_state
-                if len(current_state['transitions']) > symbol_id and\
-                        current_state['transitions'][symbol_id] >= 0:
-                    current_state = self._states[
-                        current_state['transitions'][symbol_id]]
-                    if current_state['success']:
-                        keyword = current_state['matched_keyword']
-                        return (keyword, idx + 1 - len(keyword))
 
     def finalize(self):
         '''
@@ -154,8 +145,17 @@ class KeywordTree(object):
         '''
         if self._finalized:
             raise ValueError('KeywordTree has already been finalized.')
-        finalizer = Finalizer(self)
-        finalizer.finalize()
+        self._zero_state['longest_strict_suffix'] = 0
+        self.search_lss_for_children(self._zero_state)
+        # Remove to save space
+        for state in self._states:
+            # Only needed during finalize
+            if 'longest_strict_suffix' in state:
+                del state['longest_strict_suffix']
+            del state['parent']
+            # Remove since we only need one result
+            if state['success']:
+                del state['transitions']
         self._finalized = True
 
     def __str__(self):
@@ -195,26 +195,6 @@ class KeywordTree(object):
         self._symbols = tree['symbols']
         self._case_insensitive = tree['case_insensitive']
         self._over_allocation = tree['over_allocation']
-
-
-class Finalizer(object):
-
-    def __init__(self, keyword_tree):
-        self._keyword_tree = keyword_tree
-        self._states = keyword_tree._states
-
-    def finalize(self):
-        zero_state = self._keyword_tree._zero_state
-        zero_state['longest_strict_suffix'] = 0
-        self.search_lss_for_children(zero_state)
-        # Remove to save space
-        for state in self._states:
-            # Only needed during finalize
-            del state['longest_strict_suffix']
-            del state['parent']
-            # Remove since we only need one result
-            if state['success']:
-                del state['transitions']
 
     def search_lss_for_children(self, zero_state):
         processed = set()
@@ -257,14 +237,14 @@ class Finalizer(object):
 
                     traversed = self._states[
                         traversed['longest_strict_suffix']]
-            if state['longest_strict_suffix'] > 0:
-                suffix_trans = self._states[state['longest_strict_suffix']
-                                            ]['transitions']
-                suffix_trans_len = len(suffix_trans)
-                if suffix_trans_len > len(state['transitions']):
-                    state['transitions'].fromlist(
-                        [-1] * (suffix_trans_len +
-                                self._keyword_tree._over_allocation))
-                for symbol_id, state_id in enumerate(suffix_trans):
-                    if state_id >= 0 and state['transitions'][symbol_id] < 0:
-                            state['transitions'][symbol_id] = state_id
+            suffix_trans = self._states[state['longest_strict_suffix']
+                                        ]['transitions']
+            suffix_trans_len = len(suffix_trans)
+            if suffix_trans_len > len(state['transitions']):
+                state['transitions'].fromlist(
+                    [-1] * (suffix_trans_len +
+                            self._over_allocation))
+            for symbol_id, state_id in enumerate(suffix_trans):
+                if state_id >= 0 and (state['transitions'][symbol_id] < 0 or
+                                      self._states[state_id]['success']):
+                        state['transitions'][symbol_id] = state_id
