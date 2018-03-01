@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/abusix/ahocorapy.svg?branch=master)](https://travis-ci.org/abusix/ahocorapy)
-[![PyPi](https://img.shields.io/pypi/v/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
+[![PyPi Version](https://img.shields.io/pypi/v/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
+[![PyPi License](https://img.shields.io/pypi/l/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
+[![PyPi Versions](https://img.shields.io/pypi/pyversions/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
 
 # ahocorapy - Fast Many-Keyword Search in Pure Python
 
@@ -38,7 +40,7 @@ because the number of transitions is higher, because they are all included expli
 
 I compared the two libraries mentioned above with ahocorapy. We used 50,000 keywords long list and an input text of 34,199 characters.
 In the text only one keyword of the list is contained.
-The setup process was run once per library and the setup process was run 100 times. The following results are in seconds (not averaged for the lookup).
+The setup process was run once per library and the search process was run 100 times. The following results are in seconds (not averaged for the lookup).
 
 You can perform this test yourself using `python tests/ahocorapy_performance_test.py`.
 

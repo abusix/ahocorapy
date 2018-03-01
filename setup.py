@@ -4,16 +4,20 @@
 from os import path
 import os
 
+here = os.path.abspath(os.path.dirname(__file__))
+try:
+    import pypandoc
+    long_description = pypandoc.convert_file('README.md', 'rst')
+except:
+    with open(path.join(here, 'README.md')) as f:
+        long_description = f.read()
+
 from setuptools import setup, find_packages
 
 
-here = os.path.abspath(os.path.dirname(__file__))
 
 with open('%s/VERSION' % here) as f:
     __version__ = f.readline().strip()
-
-with open(path.join(here, 'README.md')) as f:
-    long_description = f.read()
 
 setup(
     author='abusix',
@@ -23,12 +27,29 @@ setup(
     name='ahocorapy',
     packages=find_packages('src'),
     package_dir={'': 'src'},
+    package_data={
+        '': ['*.txt', '*.md'],
+    },
     install_requires=['future'],
+    python_requires='>=2.7',
     url='https://github.com/abusix/ahocorapy',
     project_urls={
         'Source': 'https://github.com/abusix/ahocorapy',
         'Company': 'https://www.abusix.com/'
     },
+    classifiers=[
+        'Development Status :: 5 - Stable',
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+    ],
     keywords = ['keyword', 'search', 'purepython', 'aho-corasick', 'ahocorasick', 'abusix'],
     license='MIT',
     version=__version__
