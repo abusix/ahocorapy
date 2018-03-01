@@ -27,9 +27,6 @@ setup(
     name='ahocorapy',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    package_data={
-        '': ['*.txt', '*.md'],
-    },
     install_requires=['future'],
     python_requires='>=2.7',
     url='https://github.com/abusix/ahocorapy',
