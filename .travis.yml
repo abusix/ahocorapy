@@ -9,8 +9,11 @@ python:
   - "pypy3.5"
 
 install:
-  - pip install pytest-cov msgpack-python
+  - pip install pytest-cov msgpack-python python-coveralls
   - pip install -e .
   
 script:
-  - py.test --cov=src/ahocorapy/ tests/ahocorapy_test.py
+  - py.test --pep8 src/ahocorapy/ --cov src/ahocorapy/ --cov-report term-missing  tests/ahocorapy_test.py
+
+after_success:
+  - coveralls
