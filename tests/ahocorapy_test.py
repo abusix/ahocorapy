@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from builtins import str
+import gzip
+from io import open
+import os
 import unittest
-from ahocorapy.keywordtree import KeywordTree
 
 import msgpack
-import gzip
-import os
+
+from ahocorapy.keywordtree import KeywordTree
 
 
 class TestAhocorapy(unittest.TestCase):
