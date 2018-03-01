@@ -3,6 +3,7 @@
 [![PyPi Version](https://img.shields.io/pypi/v/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
 [![PyPi License](https://img.shields.io/pypi/l/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
 [![PyPi Versions](https://img.shields.io/pypi/pyversions/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
+[![PyPi Wheel](https://img.shields.io/pypi/wheel/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
 
 # ahocorapy - Fast Many-Keyword Search in Pure Python
 
