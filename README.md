@@ -44,20 +44,26 @@ I compared the two libraries mentioned above with ahocorapy. We used 50,000 keyw
 In the text only one keyword of the list is contained.
 The setup process was run once per library and the search process was run 100 times. The following results are in seconds (not averaged for the lookup).
 
-You can perform this test yourself using `python tests/ahocorapy_performance_test.py`.
+You can perform this test yourself using `python tests/ahocorapy_performance_test.py`. (Except for the pyahocorasick_py results. These were taken by importing the
+pure python version of the code of [pyahocorasick](https://github.com/WojciechMula/pyahocorasick/). It's not available through pypi
+as stated in the code.
 
 These are the results:
 
 ```
 ----------ahocorapy----------
-setup_ahocorapy: 5.460791023999263
-search_ahocorapy: 1.9325687669988838
+setup_ahocorapy: 2.407656837000104
+search_ahocorapy: 0.918015885999921
 ----------pyahocorasick----------
-setup_pyahocorasick: 0.10431620100098371
-search_pyahocorasick: 0.06413857900042785
+setup_pyahocorasick: 0.09675870799947006
+search_pyahocorasick: 0.06381417899865482
+----------pyahocorasick python----------
+setup_pyahocorasick_py: 0.5029343919995881
+search_pyahocorasick_py: 1.6796333189995494
 ----------py_aho_corasick----------
-setup_py_aho_corasick: 1.9095220560011512
-search_py_aho_corasick: 14.320285862000674
+setup_py_aho_corasick: 1.8584364769994863
+search_py_aho_corasick: 13.236364944999877
+
 ```
 
 As expected the C-Extension shatters the pure python implementations. Even though there is probably still room for optimization in

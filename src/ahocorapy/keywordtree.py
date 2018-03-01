@@ -14,14 +14,25 @@ Created on Jan 5, 2016
 '''
 
 from builtins import object
-from array import array
-import json
+
+
+class State(object):
+    __slots__ = ['identifier', 'symbol', 'success', 'transitions', 'parent',
+                 'matched_keyword', 'longest_strict_suffix']
+
+    def __init__(self, identifier, symbol=None,  parent=None, success=False):
+        self.symbol = symbol
+        self.identifier = identifier
+        self.transitions = {}
+        self.parent = parent
+        self.success = success
+        self.matched_keyword = None
+        self.longest_strict_suffix = None
 
 
 class KeywordTree(object):
 
-    def __init__(self, case_insensitive=False,
-                 over_allocation=2):
+    def __init__(self, case_insensitive=False):
         '''
         @param case_insensitive: If true, case will be ignored when searching.
                                  Setting this to true will have a positive
@@ -33,15 +44,10 @@ class KeywordTree(object):
                                 resized. Default value 2 seemed to be sweet
                                 spot for memory as well as cpu.
         '''
-        self._zero_state = {
-            'id': 0, 'success': False,
-            'transitions': array('i', [-1] * over_allocation), 'parent': None}
+        self._zero_state = State(0)
+        self._counter = 1
         self._finalized = False
-        self._states = [self._zero_state]
-        self._symbols = {}
-        self._symbol_list = []
         self._case_insensitive = case_insensitive
-        self._over_allocation = over_allocation
 
     def add(self, keyword):
         '''
@@ -58,55 +64,17 @@ class KeywordTree(object):
         if len(keyword) <= 0:
             return
         current_state = self._zero_state
-        idx = 0
-        next_state = None
-        symbol = keyword[idx]
-        if symbol not in self._symbols:
-            self._symbols[symbol] = len(self._symbols)
-            self._symbol_list.append(symbol)
-        symbol_id = self._symbols[symbol]
-        if len(current_state['transitions']) > symbol_id\
-                and current_state['transitions'][symbol_id] >= 0:
-            next_state = self._states[current_state['transitions'][symbol_id]]
-        while next_state is not None:
-            idx += 1
-            if next_state['success'] or idx >= len(keyword):
-                # There is a keyword which is a prefix of the added keyword
-                # return here for performance
-                return
-            current_state = next_state
-            next_state = None
-            symbol = keyword[idx]
-            if symbol not in self._symbols:
-                self._symbols[symbol] = len(self._symbols)
-                self._symbol_list.append(symbol)
-            symbol_id = self._symbols[symbol]
-            if len(current_state['transitions']) > symbol_id\
-                    and current_state['transitions'][symbol_id] >= 0:
-                next_state = self._states[
-                    current_state['transitions'][symbol_id]]
-        while idx < len(keyword):
-            new_state = {
-                'id': len(self._states), 'success': False,
-                'transitions': array('i', [-1] * self._over_allocation),
-                'parent': current_state['id']}
-            symbol = keyword[idx]
-            if symbol not in self._symbols:
-                self._symbols[symbol] = len(self._symbols)
-                self._symbol_list.append(symbol)
-            symbol_id = self._symbols[symbol]
-            trans_len = len(current_state['transitions'])
-            if symbol_id >= trans_len:
-                current_state['transitions'].fromlist(
-                    [-1] * (symbol_id -
-                            trans_len + 1 +
-                            self._over_allocation))
-            current_state['transitions'][symbol_id] = len(self._states)
-            self._states.append(new_state)
-            current_state = new_state
-            idx += 1
-        current_state['success'] = True
-        current_state['matched_keyword'] = original_keyword
+        for char in keyword:
+            try:
+                current_state = current_state.transitions[char]
+            except KeyError:
+                next_state = State(self._counter, parent=current_state,
+                                   symbol=char)
+                self._counter += 1
+                current_state.transitions[char] = next_state
+                current_state = next_state
+        current_state.success = True
+        current_state.matched_keyword = original_keyword
 
     def search(self, text):
         '''
@@ -124,19 +92,12 @@ class KeywordTree(object):
             text = text.lower()
         current_state = self._zero_state
         for idx, symbol in enumerate(text):
-            try:
-                symbol_id = self._symbols[symbol]
-            except KeyError:
-                # Not known in keyword alphabet. Go back to zero
-                current_state = self._zero_state
-                continue
-            if len(current_state['transitions']) > symbol_id and\
-                    current_state['transitions'][symbol_id] >= 0:
-                current_state = self._states[
-                    current_state['transitions'][symbol_id]]
-                if current_state['success']:
-                    keyword = current_state['matched_keyword']
-                    return (keyword, idx + 1 - len(keyword))
+            current_state = current_state.transitions.get(symbol,
+                                                          self._zero_state)
+
+            if current_state.success:
+                keyword = current_state.matched_keyword
+                return (keyword, idx + 1 - len(keyword))
 
     def finalize(self):
         '''
@@ -145,106 +106,48 @@ class KeywordTree(object):
         '''
         if self._finalized:
             raise ValueError('KeywordTree has already been finalized.')
-        self._zero_state['longest_strict_suffix'] = 0
+        self._zero_state.longest_strict_suffix = self._zero_state
         self.search_lss_for_children(self._zero_state)
-        # Remove to save space
-        for state in self._states:
-            # Only needed during finalize
-            if 'longest_strict_suffix' in state:
-                del state['longest_strict_suffix']
-            del state['parent']
-            # Remove since we only need one result
-            if state['success']:
-                del state['transitions']
         self._finalized = True
 
     def __str__(self):
-        return "ahocorapy KeywordTree with %i states." % len(self._states)
-
-    def __repr__(self):
-        return json.dumps(self.dump())
-
-    def dump(self):
-        tree = {}
-        tree['states'] = []
-        for state in self._states:
-            serializable_state = state.copy()
-            if 'transitions' in state:
-                serializable_state['transitions'] = state[
-                    'transitions'].tolist()
-            tree['states'].append(serializable_state)
-        tree['finalized'] = self._finalized
-        tree['symbols'] = self._symbols
-        tree['symbol_list'] = self._symbol_list
-        tree['case_insensitive'] = self._case_insensitive
-        tree['over_allocation'] = self._over_allocation
-        return tree
-
-    def load(self, tree):
-        self._states = []
-        for serializable_state in tree['states']:
-            state = serializable_state.copy()
-            if 'transitions' in serializable_state:
-                arr = array('i')
-                arr.fromlist(serializable_state['transitions'])
-                state['transitions'] = arr
-            self._states.append(state)
-        self._zero_state = self._states[0]
-        self._finalized = tree['finalized']
-        self._symbol_list = tree['symbol_list']
-        self._symbols = tree['symbols']
-        self._case_insensitive = tree['case_insensitive']
-        self._over_allocation = tree['over_allocation']
+        return "ahocorapy KeywordTree"
 
     def search_lss_for_children(self, zero_state):
         processed = set()
         to_process = [zero_state]
         while to_process:
             state = to_process.pop()
-            processed.add(state['id'])
-            for symbol_id, childid in enumerate(state['transitions']):
-                if childid >= 0 and childid not in processed:
-                    child = self._states[childid]
-                    self.search_lss(child, symbol_id)
+            processed.add(state.identifier)
+            for child in state.transitions.values():
+                if child.identifier not in processed:
+                    self.search_lss(child)
                     to_process.append(child)
 
-    def search_lss(self, state, symbol_id):
-        if 'longest_strict_suffix' not in state:
-            parent = self._states[state['parent']]
-            found_suffix = False
-            if 'longest_strict_suffix' not in parent:
+    def search_lss(self, state):
+        if state.longest_strict_suffix is None:
+            parent = state.parent
+            if parent.longest_strict_suffix is None:
                 # Has not been done yet. Do early
-                self.search_lss(parent,
-                                [ingoing_symbol_id for ingoing_symbol_id,
-                                 ingoing_state_id in enumerate(
-                                     parent['transitions'])
-                                 if ingoing_state_id == state['id']][0])
-            traversed = self._states[parent['longest_strict_suffix']]
-            while not found_suffix:
-                if len(traversed['transitions']) > symbol_id\
-                        and traversed['transitions'][symbol_id] >= 0\
-                        and traversed['transitions'][symbol_id] != state['id']:
-                    state['longest_strict_suffix'] = traversed[
-                        'transitions'][symbol_id]
-                    found_suffix = True
-                elif traversed['id'] == 0:
-                    state['longest_strict_suffix'] = 0
-                    found_suffix = True
+                self.search_lss(parent)
+            traversed = parent.longest_strict_suffix
+            while True:
+                if state.symbol in traversed.transitions and\
+                        traversed.transitions[state.symbol] != state:
+                    state.longest_strict_suffix =\
+                        traversed.transitions[state.symbol]
+                    break
+                elif traversed == self._zero_state:
+                    state.longest_strict_suffix = self._zero_state
+                    break
                 else:
-                    if 'longest_strict_suffix' not in traversed:
-                        # Has not been done yet. Do early
-                        self.search_lss(traversed, symbol_id)
+                    if traversed.longest_strict_suffix is None:
+                        self.search_lss(traversed)
+                    traversed = traversed.longest_strict_suffix
 
-                    traversed = self._states[
-                        traversed['longest_strict_suffix']]
-            suffix_trans = self._states[state['longest_strict_suffix']
-                                        ]['transitions']
-            suffix_trans_len = len(suffix_trans)
-            if suffix_trans_len > len(state['transitions']):
-                state['transitions'].fromlist(
-                    [-1] * (suffix_trans_len +
-                            self._over_allocation))
-            for symbol_id, state_id in enumerate(suffix_trans):
-                if state_id >= 0 and (state['transitions'][symbol_id] < 0 or
-                                      self._states[state_id]['success']):
-                        state['transitions'][symbol_id] = state_id
+            for symbol, next_state in\
+                    state.longest_strict_suffix.transitions.items():
+                if next_state != self._zero_state\
+                        and (symbol not in state.transitions or
+                             next_state.success):
+                    state.transitions[symbol] = next_state

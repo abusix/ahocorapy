@@ -176,35 +176,6 @@ class TestAhocorapy(unittest.TestCase):
         result = kwtree.search('BLISS')
         self.assertEqual(('blISs', 0), result)
 
-    def test_dump_and_load(self):
-        kwtree = KeywordTree(case_insensitive=True)
-        kwtree.add('bla')
-        kwtree.add('blue')
-        kwtree.add('blISs')
-        kwtree.finalize()
-
-        filename = 'kwtree_unittest.msgpack.gz'
-
-        dumped = kwtree.dump()
-        with gzip.open(filename, 'wb') as output_file:
-            msgpack.dump(dumped, output_file, use_bin_type=True)
-
-        with gzip.open(filename, 'rb') as input_file:
-            loadedTree = msgpack.load(input_file, encoding='utf-8')
-        kwtree2 = KeywordTree()
-        kwtree2.load(loadedTree)
-
-        result = kwtree2.search('bLa')
-        self.assertEqual(('bla', 0), result)
-
-        result = kwtree2.search('BLISS')
-        self.assertEqual(('blISs', 0), result)
-
-        try:
-            os.remove(filename)
-        except OSError:
-            pass
-
     def test_utility_calls(self):
         kwtree = KeywordTree(case_insensitive=True)
         kwtree.add('bla')
@@ -249,7 +220,6 @@ class TestAhocorapy(unittest.TestCase):
 
         result = kwtree.search(textblob)
         self.assertEqual(('Dawn Higgins', 34153), result)
-
 
 if __name__ == '__main__':
     unittest.main()
