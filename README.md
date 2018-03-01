@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/abusix/ahocorapy.svg?branch=master)](https://travis-ci.org/abusix/ahocorapy)
+[![Build Status](https://img.shields.io/travis/abusix/ahocorapy/master.svg)](https://travis-ci.org/abusix/ahocorapy)
+[![Test Coverage](https://img.shields.io/coveralls/github/abusix/ahocorapy/master.svg)](https://pypi.python.org/pypi/ahocorapy)
 [![PyPi Version](https://img.shields.io/pypi/v/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
 [![PyPi License](https://img.shields.io/pypi/l/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
 [![PyPi Versions](https://img.shields.io/pypi/pyversions/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
