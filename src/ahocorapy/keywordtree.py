@@ -206,7 +206,7 @@ class Finalizer(object):
     def finalize(self):
         zero_state = self._keyword_tree._zero_state
         zero_state['longest_strict_suffix'] = 0
-        self.search_longest_strict_suffixes_for_children(zero_state)
+        self.search_lss_for_children(zero_state)
         # Remove to save space
         for state in self._states:
             # Only needed during finalize
@@ -216,29 +216,29 @@ class Finalizer(object):
             if state['success']:
                 del state['transitions']
 
-    def search_longest_strict_suffixes_for_children(self, state):
+    def search_lss_for_children(self, zero_state):
         processed = set()
-        to_process = [state]
+        to_process = [zero_state]
         while to_process:
-            state_to_process = to_process.pop()
-            processed.add(state_to_process['id'])
-            for symbol_id, childid in enumerate(state_to_process['transitions']):
+            state = to_process.pop()
+            processed.add(state['id'])
+            for symbol_id, childid in enumerate(state['transitions']):
                 if childid >= 0 and childid not in processed:
                     child = self._states[childid]
-                    self.search_longest_strict_suffix(child, symbol_id)
+                    self.search_lss(child, symbol_id)
                     to_process.append(child)
 
-    def search_longest_strict_suffix(self, state, symbol_id):
+    def search_lss(self, state, symbol_id):
         if 'longest_strict_suffix' not in state:
             parent = self._states[state['parent']]
             found_suffix = False
             if 'longest_strict_suffix' not in parent:
                 # Has not been done yet. Do early
-                self.search_longest_strict_suffix(parent,
-                                                  [ingoing_symbol_id for ingoing_symbol_id,
-                                                   ingoing_state_id in enumerate(
-                                                       parent['transitions'])
-                                                   if ingoing_state_id == state['id']][0])
+                self.search_lss(parent,
+                                [ingoing_symbol_id for ingoing_symbol_id,
+                                 ingoing_state_id in enumerate(
+                                     parent['transitions'])
+                                 if ingoing_state_id == state['id']][0])
             traversed = self._states[parent['longest_strict_suffix']]
             while not found_suffix:
                 if len(traversed['transitions']) > symbol_id\
@@ -253,7 +253,7 @@ class Finalizer(object):
                 else:
                     if 'longest_strict_suffix' not in traversed:
                         # Has not been done yet. Do early
-                        self.search_longest_strict_suffix(traversed, symbol_id)
+                        self.search_lss(traversed, symbol_id)
 
                     traversed = self._states[
                         traversed['longest_strict_suffix']]
