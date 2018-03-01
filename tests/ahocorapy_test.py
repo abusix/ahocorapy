@@ -66,7 +66,7 @@ class TestAhocorapy(unittest.TestCase):
 
         result = kwtree.search('blaaaaamentada')
         self.assertEqual(('aaaamen', 3), result)
-        
+
         result = kwtree.search('clueuebergaaameblaaaamenbluez')
         self.assertEqual(('aaaamen', 17), result)
 
