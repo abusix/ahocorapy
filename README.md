@@ -52,8 +52,8 @@ These are the results:
 
 ```
 ----------ahocorapy----------
-setup_ahocorapy: 2.407656837000104
-search_ahocorapy: 0.918015885999921
+setup_ahocorapy: 1.3445994260000589
+search_ahocorapy: 1.517441007999878
 ----------pyahocorasick----------
 setup_pyahocorasick: 0.09675870799947006
 search_pyahocorasick: 0.06381417899865482

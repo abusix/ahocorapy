@@ -92,9 +92,9 @@ class KeywordTree(object):
             text = text.lower()
         current_state = self._zero_state
         for idx, symbol in enumerate(text):
-            current_state = current_state.transitions.get(symbol,
-                                                          self._zero_state)
-
+            current_state = current_state.transitions.get(
+                symbol, self._zero_state.transitions.get(symbol,
+                                                         self._zero_state))
             if current_state.success:
                 keyword = current_state.matched_keyword
                 return (keyword, idx + 1 - len(keyword))
@@ -147,7 +147,7 @@ class KeywordTree(object):
 
             for symbol, next_state in\
                     state.longest_strict_suffix.transitions.items():
-                if next_state != self._zero_state\
-                        and (symbol not in state.transitions or
-                             next_state.success):
+                if (symbol not in state.transitions and
+                        state.longest_strict_suffix != self._zero_state)\
+                        or next_state.success:
                     state.transitions[symbol] = next_state

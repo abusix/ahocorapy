@@ -8,20 +8,26 @@ class Visualizer(object):
     def __init__(self):
         self._added = set()
 
+
+    def _add_state_and_children(self, graph, state, added_state_ids):
+        if state.identifier in added_state_ids:
+            return
+        if state.success:
+            graph.add_node(
+                    state.identifier,
+                    color='green',
+                    label=str(state.identifier) + ' [' +
+                    state.matched_keyword + ']')
+        else:
+            graph.add_node(state.identifier)
+        added_state_ids.add(state.identifier)
+        for symbol, child in state.transitions.items():
+            self._add_state_and_children(graph, child, added_state_ids)
+            graph.add_edge(state.identifier, child.identifier, label=symbol)
+    
+    
     def draw(self, filename, kwtree):
-        g = pgv.AGraph(directed=True)
-        for state in kwtree._states:
-            if state['success']:
-                g.add_node(
-                    state['id'], color='green',
-                    label=str(state['id']) + ' [' +
-                    state['matched_keyword'] + ']')
-            else:
-                g.add_node(state['id'])
-        for state in kwtree._states:
-            if 'transitions' in state:
-                for symbol_id, state_id in enumerate(state['transitions']):
-                    if state_id >= 0:
-                        g.add_edge(state['id'], state_id,
-                                   label=kwtree._symbol_list[symbol_id])
-        g.draw(filename, prog='dot')
+        graph = pgv.AGraph(directed=True)
+        added_state_ids = set()
+        self._add_state_and_children(graph, kwtree._zero_state, added_state_ids)
+        graph.draw(filename, prog='dot')
