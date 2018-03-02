@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from builtins import str
-import gzip
 from io import open
-import os
 import unittest
 
-import msgpack
 
 from ahocorapy.keywordtree import KeywordTree
 
