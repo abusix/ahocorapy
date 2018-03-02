@@ -46,7 +46,7 @@ The setup process was run once per library and the search process was run 100 ti
 
 You can perform this test yourself using `python tests/ahocorapy_performance_test.py`. (Except for the pyahocorasick_py results. These were taken by importing the
 pure python version of the code of [pyahocorasick](https://github.com/WojciechMula/pyahocorasick/). It's not available through pypi
-as stated in the code.
+as stated in the code.)
 
 These are the results:
 
