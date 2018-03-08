@@ -164,13 +164,12 @@ class KeywordTree(object):
                     if traversed.longest_strict_suffix is None:
                         self.search_lss(traversed)
                     traversed = traversed.longest_strict_suffix
-                    
-            if state.longest_strict_suffix.success:
+            suffix = state.longest_strict_suffix
+            if suffix.success:
                 state.success = True
-                state.matched_keywords.extend(state.longest_strict_suffix.matched_keywords)
+                state.matched_keywords.extend(suffix.matched_keywords)
 
-            for symbol, next_state in\
-                    state.longest_strict_suffix.transitions.items():
+            for symbol, next_state in suffix.transitions.items():
                 if (symbol not in state.transitions and
-                        state.longest_strict_suffix != self._zero_state):
+                        suffix != self._zero_state):
                     state.transitions[symbol] = next_state

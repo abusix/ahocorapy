@@ -82,7 +82,7 @@ class TestAhocorapy(unittest.TestCase):
         kwtree.add('a')
         kwtree.finalize()
 
-        result = kwtree.search('bla')
+        result = kwtree.search_one('bla')
         self.assertEqual(('a', 2), result)
 
     def test_text_end_situation_2(self):
@@ -224,7 +224,7 @@ class TestAhocorapy(unittest.TestCase):
 
         result = kwtree.search(textblob)
         self.assertEqual(('Dawn Higgins', 34153), result)
-        
+
         results = kwtree.search_all(textblob)
         self.assertIsNotNone(results)
         self.assertEqual(('Dawn Higgins', 34153), next(results))

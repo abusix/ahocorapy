@@ -79,6 +79,7 @@ kwtree.add('malaga')
 kwtree.add('lacrosse')
 kwtree.add('mallorca')
 kwtree.add('mallorca bella')
+kwtree.add('orca')
 kwtree.finalize()
 ```
 
