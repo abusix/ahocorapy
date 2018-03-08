@@ -124,5 +124,5 @@ visualizer.draw('readme_example.png', kwtree)
 
 The resulting .png of the graph looks like this: 
 
-![graph for kwtree](img/readme_example.png "Keyword Tree")
+![graph for kwtree](https://raw.githubusercontent.com/abusix/ahocorapy/master/img/readme_example.png "Keyword Tree")
 
