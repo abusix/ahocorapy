@@ -66,6 +66,12 @@ searching. The setup overhead is higher due to the suffix shortcutting mechanism
 
 ## Basic Usage:
 
+### Installation
+
+```
+pip install ahocorapy
+```
+
 ### Creation of the Search Tree
 
 ```python
