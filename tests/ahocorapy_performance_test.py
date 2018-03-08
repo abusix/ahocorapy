@@ -30,8 +30,10 @@ def init_ahocorapy():
 
 
 def search_ahocorapy(ahocorapy_tree, textblob):
-    keyword, _ = ahocorapy_tree.search(textblob)
-    return keyword
+    result = ''
+    for keyword, _ in ahocorapy_tree.search_all(textblob):
+        result += keyword
+    return result
 
 
 ahocorapy_tree = init_ahocorapy()

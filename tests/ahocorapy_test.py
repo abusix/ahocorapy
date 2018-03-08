@@ -52,8 +52,13 @@ class TestAhocorapy(unittest.TestCase):
             'idontlikewhitespaceswhereismalacrossequestionmark')
         self.assertEqual(('lacrosse', 29), result)
 
-        result = kwtree.search('crossing on mallorca bella')
-        self.assertEqual(('mallorca', 12), result)
+        results = kwtree.search_all('malheur on mallorca bellacrosse')
+        self.assertIsNotNone(results)
+        self.assertEqual(('mallorca', 11), next(results))
+        self.assertEqual(('mallorca bella', 11), next(results))
+        self.assertEqual(('lacrosse', 23), next(results))
+        with self.assertRaises(StopIteration):
+            next(results)
 
     def test_suffix_stuff(self):
         kwtree = KeywordTree()
@@ -217,6 +222,12 @@ class TestAhocorapy(unittest.TestCase):
 
         result = kwtree.search(textblob)
         self.assertEqual(('Dawn Higgins', 34153), result)
+        
+        results = kwtree.search_all(textblob)
+        self.assertIsNotNone(results)
+        self.assertEqual(('Dawn Higgins', 34153), next(results))
+        with self.assertRaises(StopIteration):
+            next(results)
 
 if __name__ == '__main__':
     unittest.main()

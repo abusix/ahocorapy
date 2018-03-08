@@ -78,6 +78,12 @@ class KeywordTree(object):
 
     def search(self, text):
         '''
+        Alias for the search_one method
+        '''
+        return self.search_one(text)
+
+    def search_one(self, text):
+        '''
         Search a text for any occurence of a keyword.
         Returns when one keyword has been found.
         Can only be called after finalized() has been called.
@@ -98,6 +104,28 @@ class KeywordTree(object):
             if current_state.success:
                 keyword = current_state.matched_keyword
                 return (keyword, idx + 1 - len(keyword))
+
+    def search_all(self, text):
+        '''
+        Search a text for any occurence of a keyword.
+        Can only be called after finalized() has been called.
+        O(n) with n = len(text)
+        @return: Generator used to iterate over the results.
+                 Or None if no keyword was found in the text.
+        '''
+        if not self._finalized:
+            raise ValueError('KeywordTree has not been finalized.' +
+                             ' No search allowed. Call finalize() first.')
+        if self._case_insensitive:
+            text = text.lower()
+        current_state = self._zero_state
+        for idx, symbol in enumerate(text):
+            current_state = current_state.transitions.get(
+                symbol, self._zero_state.transitions.get(symbol,
+                                                         self._zero_state))
+            if current_state.success:
+                keyword = current_state.matched_keyword
+                yield (keyword, idx + 1 - len(keyword))
 
     def finalize(self):
         '''

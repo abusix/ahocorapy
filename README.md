@@ -76,6 +76,7 @@ can also vary depending on how the data is structured (both keywords and input t
 ### Creation of the Search Tree
 
 ```python
+from ahocorapy.keywordtree import KeywordTree
 kwtree = KeywordTree(case_insensitive=True)
 kwtree.add('malaga')
 kwtree.add('lacrosse')
@@ -88,7 +89,7 @@ kwtree.finalize()
 
 ```python
 result = kwtree.search('My favorite islands are malaga and sylt.')
-print result
+print(result)
 ```
 
 Prints :
@@ -96,18 +97,20 @@ Prints :
 ('malaga', 24)
 ```
 
-The search method always returns the first keyword found, or None if there is none.
+The search_all method returns the all keywords found in a generator, or None if there is none.
 
 ```python
-result = kwtree.search('crossing on mallorca bella')
-print result
+results = kwtree.search_all('malheur on mallorca bellacrosse')
+for result in results:
+    print(result)
 ```
 
 Prints :
 ```python
-('mallorca', 12)
+('mallorca', 11)
+('mallorca bella', 11)
+('lacrosse', 23)
 ```
-and not 'mallorca bella'. Since 'mallorca' is a strict prefix of it.
 
 ## Drawing Graph
 
