@@ -1,19 +1,19 @@
-from builtins import map
-from io import open
+from __future__ import print_function
+
 from timeit import timeit
 
-import ahocorasick
 from py_aho_corasick import py_aho_corasick
 
+import __builtin__
 from ahocorapy.keywordtree import KeywordTree
-
+import ahocorasick
 
 
 SEARCH_ITERATIONS = 100
 
 
 with open('tests/data/names.txt') as keyword_file:
-    keyword_list = list(map(str.strip, keyword_file.readlines()))
+    keyword_list = [keyword.strip() for keyword in keyword_file.readlines()]
 
 with open('tests/data/textblob.txt') as keyword_file:
     textblob = keyword_file.read()
@@ -39,39 +39,39 @@ def search_ahocorapy(ahocorapy_tree, textblob):
 ahocorapy_tree = init_ahocorapy()
 result = search_ahocorapy(ahocorapy_tree, textblob)
 assert result == 'Dawn Higgins'
-
+__builtin__.__dict__.update(locals())
 print('setup_ahocorapy: ' +
-      str(timeit(stmt='init_ahocorapy()', number=1, globals=globals())))
+      str(timeit(stmt='init_ahocorapy()', number=1)))
 print('search_ahocorapy: ' + str(timeit(stmt='search_ahocorapy(ahocorapy_tree, textblob)',
-                                        number=SEARCH_ITERATIONS, globals=globals())))
+                                        number=SEARCH_ITERATIONS)))
  
 print('-' * 10 + 'pyahocorasick' + '-' * 10)
- 
- 
+   
+   
 def init_ahocorasick():
     A = ahocorasick.Automaton()
     for keyword in keyword_list:
         A.add_word(keyword, keyword)
     A.make_automaton()
     return A
- 
- 
+   
+   
 def search_ahocorasick(ahocorasick_tree, textblob):
     result = ''
     for _, keyword in ahocorasick_tree.iter(textblob):
         result += keyword
     return result
- 
- 
+   
+   
 ahocorasick_tree = init_ahocorasick()
 result = search_ahocorasick(ahocorasick_tree, textblob)
 assert result == 'Dawn Higgins'
- 
+__builtin__.__dict__.update(locals())
 print('setup_pyahocorasick: ' +
-      str(timeit(stmt='init_ahocorasick()', number=1, globals=globals())))
+      str(timeit(stmt='init_ahocorasick()', number=1)))
 print('search_pyahocorasick: ' + str(timeit(stmt='search_ahocorasick(ahocorasick_tree, textblob)',
-                                            number=SEARCH_ITERATIONS, globals=globals())))
- 
+                                            number=SEARCH_ITERATIONS)))
+  
  
 print('-' * 10 + 'py_aho_corasick' + '-' * 10)
  
@@ -90,9 +90,8 @@ def search_py_aho_corasick(py_aho_corasick_tree, textblob):
 py_aho_corasick_tree = init_py_aho_corasick()
 result = search_py_aho_corasick(py_aho_corasick_tree, textblob)
 assert result == 'dawn higgins'
- 
+__builtin__.__dict__.update(locals())
 print('setup_py_aho_corasick: ' +
-      str(timeit(stmt='init_py_aho_corasick()', number=1, globals=globals())))
- 
+      str(timeit(stmt='init_py_aho_corasick()', number=1)))
 print('search_py_aho_corasick: ' + str(timeit(stmt='search_py_aho_corasick(py_aho_corasick_tree, textblob)',
-                                              number=SEARCH_ITERATIONS, globals=globals())))
+                                              number=SEARCH_ITERATIONS)))

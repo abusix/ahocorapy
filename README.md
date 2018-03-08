@@ -45,27 +45,23 @@ You can perform this test yourself using `python tests/ahocorapy_performance_tes
 pure python version of the code of [pyahocorasick](https://github.com/WojciechMula/pyahocorasick/). It's not available through pypi
 as stated in the code.)
 
+I also added measurements for the pure python libraries with run with pypy.
+
 These are the results:
 
-```
-----------ahocorapy----------
-setup_ahocorapy: 1.3445994260000589
-search_ahocorapy: 1.517441007999878
-----------pyahocorasick----------
-setup_pyahocorasick: 0.09675870799947006
-search_pyahocorasick: 0.06381417899865482
-----------pyahocorasick python----------
-setup_pyahocorasick_py: 0.5029343919995881
-search_pyahocorasick_py: 1.6796333189995494
-----------py_aho_corasick----------
-setup_py_aho_corasick: 1.8584364769994863
-search_py_aho_corasick: 13.236364944999877
-
-```
+| Library (Variant)                                  | Setup (1x) | Search (100x) |
+|----------------------------------------------------|-:-:--------|--:------------|
+| ahocorapy                                          | 1.3s       | 1.51s         |
+| ahocorapy (run with pypy)                          | 1.3s       | 0.09s         |
+| pyahocorasick                                      | 0.1s       | 0.06s         |
+| pyahocorasick (pure python variant in github repo) | 0.5s       | 1.68s         |
+| py_aho_corasick                                    | 1.9s       | 13.2s         |
+| py_aho_corasick (run with pypy)                    | 1.3s       | 3.71s         |
 
 As expected the C-Extension shatters the pure python implementations. Even though there is probably still room for optimization in
-ahocorapy we are not going to get to the mark that pyahocorasick sets. Our lookups are faster than py_aho_corasick though, but that
-can also vary depending on how the data is structured (both keywords and input text).
+ahocorapy we are not going to get to the mark that pyahocorasick sets. ahocorapy's lookups are faster than py_aho_corasick. 
+When run with pypy [PyPy 5.1.2 with GCC 5.3.1 20160413] ahocorapy is almost as fast as pyahocorasick, at least when it comes to
+searching. The setup overhead is higher due to the suffix shortcutting mechanism used.
 
 
 ## Basic Usage:
