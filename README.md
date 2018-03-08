@@ -95,7 +95,7 @@ Prints :
 ('malaga', 24)
 ```
 
-The search_all method returns the all keywords found in a generator, or None if there is none.
+The search_all method returns a generator for all keywords found, or None if there is none.
 
 ```python
 results = kwtree.search_all('malheur on mallorca bellacrosse')
