@@ -43,6 +43,7 @@ class TestAhocorapy(unittest.TestCase):
         kwtree.add('lacrosse')
         kwtree.add('mallorca')
         kwtree.add('mallorca bella')
+        kwtree.add('orca')
         kwtree.finalize()
 
         result = kwtree.search('My favorite islands are malaga and sylt.')
@@ -55,6 +56,7 @@ class TestAhocorapy(unittest.TestCase):
         results = kwtree.search_all('malheur on mallorca bellacrosse')
         self.assertIsNotNone(results)
         self.assertEqual(('mallorca', 11), next(results))
+        self.assertEqual(('orca', 15), next(results))
         self.assertEqual(('mallorca bella', 11), next(results))
         self.assertEqual(('lacrosse', 23), next(results))
         with self.assertRaises(StopIteration):

@@ -17,7 +17,7 @@ class Visualizer(object):
                     state.identifier,
                     color='green',
                     label=str(state.identifier) + ' [' +
-                    state.matched_keyword + ']')
+                    ','.join(state.matched_keywords) + ']')
         else:
             graph.add_node(state.identifier)
         added_state_ids.add(state.identifier)

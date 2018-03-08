@@ -25,10 +25,7 @@ suitable for really large sets of keywords') which really was the case the last 
 ### Differences
 
 - Compared to [pyahocorasick](https://github.com/WojciechMula/pyahocorasick/) our library supports unicode in python 2.7 just like [py-aho-corasick](https://github.com/JanFan/py-aho-corasick).
-We don't use any C-Extension so the library is not platform dependant. 
-
-- We don't look for multiple results, we are okay with finding only one. We might extend this in the future. 
-For our use cases that was sufficient and helps with performance.
+We don't use any C-Extension so the library is not platform dependant.
 
 - On top of the standard Aho-Corasick longest suffix search, we also perform a shortcutting routine in the end, so
 that our lookup is fast while, the setup takes longer. During set up we go through the states and directly add transitions that are
@@ -108,6 +105,7 @@ for result in results:
 Prints :
 ```python
 ('mallorca', 11)
+('orca', 15)
 ('mallorca bella', 11)
 ('lacrosse', 23)
 ```

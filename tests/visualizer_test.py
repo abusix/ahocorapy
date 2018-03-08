@@ -14,17 +14,8 @@ class TestAhocorapyVisualizer(unittest.TestCase):
         kwtree.add('lacrosse')
         kwtree.add('mallorca')
         kwtree.add('mallorca bella')
+        kwtree.add('orca')
         kwtree.finalize()
-
-        result = kwtree.search('My favorite islands are malaga and sylt.')
-        self.assertEqual(('malaga', 24), result)
-
-        result = kwtree.search(
-            'idontlikewhitespaceswhereismalacrossequestionmark')
-        self.assertEqual(('lacrosse', 29), result)
-
-        result = kwtree.search('crossing on mallorca bella')
-        self.assertEqual(('mallorca', 12), result)
 
         visualizer = Visualizer()
         visualizer.draw('readme_example.png', kwtree)

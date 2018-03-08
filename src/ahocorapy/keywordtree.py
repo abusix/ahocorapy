@@ -18,7 +18,7 @@ from builtins import object
 
 class State(object):
     __slots__ = ['identifier', 'symbol', 'success', 'transitions', 'parent',
-                 'matched_keyword', 'longest_strict_suffix']
+                 'matched_keywords', 'longest_strict_suffix']
 
     def __init__(self, identifier, symbol=None,  parent=None, success=False):
         self.symbol = symbol
@@ -26,7 +26,7 @@ class State(object):
         self.transitions = {}
         self.parent = parent
         self.success = success
-        self.matched_keyword = None
+        self.matched_keywords = []
         self.longest_strict_suffix = None
 
 
@@ -74,7 +74,7 @@ class KeywordTree(object):
                 current_state.transitions[char] = next_state
                 current_state = next_state
         current_state.success = True
-        current_state.matched_keyword = original_keyword
+        current_state.matched_keywords.append(original_keyword)
 
     def search(self, text):
         '''
@@ -84,30 +84,22 @@ class KeywordTree(object):
 
     def search_one(self, text):
         '''
-        Search a text for any occurence of a keyword.
+        Search a text for any occurence of any added keyword.
         Returns when one keyword has been found.
         Can only be called after finalized() has been called.
         O(n) with n = len(text)
         @return: 2-Tuple with keyword and startindex in text.
                  Or None if no keyword was found in the text.
         '''
-        if not self._finalized:
-            raise ValueError('KeywordTree has not been finalized.' +
-                             ' No search allowed. Call finalize() first.')
-        if self._case_insensitive:
-            text = text.lower()
-        current_state = self._zero_state
-        for idx, symbol in enumerate(text):
-            current_state = current_state.transitions.get(
-                symbol, self._zero_state.transitions.get(symbol,
-                                                         self._zero_state))
-            if current_state.success:
-                keyword = current_state.matched_keyword
-                return (keyword, idx + 1 - len(keyword))
+        result_gen = self.search_all(text)
+        try:
+            return next(result_gen)
+        except StopIteration:
+            return None
 
     def search_all(self, text):
         '''
-        Search a text for any occurence of a keyword.
+        Search a text for all occurences of the added keywords.
         Can only be called after finalized() has been called.
         O(n) with n = len(text)
         @return: Generator used to iterate over the results.
@@ -124,8 +116,8 @@ class KeywordTree(object):
                 symbol, self._zero_state.transitions.get(symbol,
                                                          self._zero_state))
             if current_state.success:
-                keyword = current_state.matched_keyword
-                yield (keyword, idx + 1 - len(keyword))
+                for keyword in current_state.matched_keywords:
+                    yield (keyword, idx + 1 - len(keyword))
 
     def finalize(self):
         '''
@@ -172,10 +164,13 @@ class KeywordTree(object):
                     if traversed.longest_strict_suffix is None:
                         self.search_lss(traversed)
                     traversed = traversed.longest_strict_suffix
+                    
+            if state.longest_strict_suffix.success:
+                state.success = True
+                state.matched_keywords.extend(state.longest_strict_suffix.matched_keywords)
 
             for symbol, next_state in\
                     state.longest_strict_suffix.transitions.items():
                 if (symbol not in state.transitions and
-                        state.longest_strict_suffix != self._zero_state)\
-                        or next_state.success:
+                        state.longest_strict_suffix != self._zero_state):
                     state.transitions[symbol] = next_state
