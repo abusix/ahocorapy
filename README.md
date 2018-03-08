@@ -50,7 +50,7 @@ I also added measurements for the pure python libraries with run with pypy.
 These are the results:
 
 | Library (Variant)                                  | Setup (1x) | Search (100x) |
-|----------------------------------------------------|-:-:--------|--:------------|
+|----------------------------------------------------|------------|---------------|
 | ahocorapy                                          | 1.3s       | 1.51s         |
 | ahocorapy (run with pypy)                          | 1.3s       | 0.09s         |
 | pyahocorasick                                      | 0.1s       | 0.06s         |
