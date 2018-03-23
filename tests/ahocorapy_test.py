@@ -238,9 +238,9 @@ class TestAhocorapy(unittest.TestCase):
         for word in words:
             tree.add(word)
         tree.finalize()
-        
+
         results = tree.search_all(text)
-        
+
         self.assertEqual(('/foo/bar', 0), next(results))
         self.assertEqual(('/bar', 4), next(results))
         self.assertEqual(('bar', 5), next(results))
@@ -252,7 +252,7 @@ class TestAhocorapy(unittest.TestCase):
         for word in words:
             tree.add(word)
         tree.finalize()
-        
+
         results = tree.search_all(text)
 
         self.assertEqual(('bar', 5), next(results))
