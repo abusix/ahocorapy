@@ -51,8 +51,8 @@ These are the results:
 
 | Library (Variant)                                  | Setup (1x) | Search (100x) |
 |----------------------------------------------------|------------|---------------|
-| ahocorapy                                          | 1.3s       | 1.51s         |
-| ahocorapy (run with pypy)                          | 1.3s       | 0.09s         |
+| ahocorapy                                          | 1.2s       | 1.76s         |
+| ahocorapy (run with pypy)                          | 0.9s       | 0.09s         |
 | pyahocorasick                                      | 0.1s       | 0.06s         |
 | pyahocorasick (pure python variant in github repo) | 0.5s       | 1.68s         |
 | py_aho_corasick                                    | 1.9s       | 13.2s         |
