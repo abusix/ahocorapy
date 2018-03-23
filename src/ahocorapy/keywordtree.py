@@ -117,8 +117,8 @@ class KeywordTree(object):
                                                          self._zero_state))
             state = current_state
             while state != self._zero_state:
-                keyword = state.matched_keyword
-                if keyword:
+                if state.success:
+                    keyword = state.matched_keyword
                     yield (keyword, idx + 1 - len(keyword))
                 state = state.longest_strict_suffix
 
