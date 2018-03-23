@@ -231,5 +231,31 @@ class TestAhocorapy(unittest.TestCase):
         with self.assertRaises(StopIteration):
             next(results)
 
+    def test_search_all_issue_1(self):
+        text = '/foo/bar'
+        words = ['/bar', '/foo/bar', 'bar']
+        tree = KeywordTree(case_insensitive=True)
+        for word in words:
+            tree.add(word)
+        tree.finalize()
+        
+        results = tree.search_all(text)
+        
+        self.assertEqual(('/foo/bar', 0), next(results))
+        self.assertEqual(('/bar', 4), next(results))
+        self.assertEqual(('bar', 5), next(results))
+
+    def test_search_all_issue_1_similar(self):
+        text = '/foo/bar'
+        words = ['/bara', '/foo/barb', 'bar']
+        tree = KeywordTree(case_insensitive=True)
+        for word in words:
+            tree.add(word)
+        tree.finalize()
+        
+        results = tree.search_all(text)
+
+        self.assertEqual(('bar', 5), next(results))
+
 if __name__ == '__main__':
     unittest.main()

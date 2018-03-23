@@ -18,7 +18,7 @@ from builtins import object
 
 class State(object):
     __slots__ = ['identifier', 'symbol', 'success', 'transitions', 'parent',
-                 'matched_keywords', 'longest_strict_suffix']
+                 'matched_keyword', 'longest_strict_suffix']
 
     def __init__(self, identifier, symbol=None,  parent=None, success=False):
         self.symbol = symbol
@@ -26,7 +26,7 @@ class State(object):
         self.transitions = {}
         self.parent = parent
         self.success = success
-        self.matched_keywords = []
+        self.matched_keyword = None
         self.longest_strict_suffix = None
 
 
@@ -74,7 +74,7 @@ class KeywordTree(object):
                 current_state.transitions[char] = next_state
                 current_state = next_state
         current_state.success = True
-        current_state.matched_keywords.append(original_keyword)
+        current_state.matched_keyword = original_keyword
 
     def search(self, text):
         '''
@@ -115,9 +115,12 @@ class KeywordTree(object):
             current_state = current_state.transitions.get(
                 symbol, self._zero_state.transitions.get(symbol,
                                                          self._zero_state))
-            if current_state.success:
-                for keyword in current_state.matched_keywords:
+            state = current_state
+            while state != self._zero_state:
+                keyword = state.matched_keyword
+                if keyword:
                     yield (keyword, idx + 1 - len(keyword))
+                state = state.longest_strict_suffix
 
     def finalize(self):
         '''
@@ -165,9 +168,6 @@ class KeywordTree(object):
                         self.search_lss(traversed)
                     traversed = traversed.longest_strict_suffix
             suffix = state.longest_strict_suffix
-            if suffix.success:
-                state.success = True
-                state.matched_keywords.extend(suffix.matched_keywords)
 
             for symbol, next_state in suffix.transitions.items():
                 if (symbol not in state.transitions and
