@@ -5,9 +5,6 @@ Supports unicode.
 Quite optimized, the code may not be as beautiful as you like,
 since inlining and so on was necessary
 
-This library is optimized for the cPython interpreter.
-I will most likely run slower with pypy, etc.
-
 Created on Jan 5, 2016
 
 @author: Frederik Petersen (fp@abusix.com)
@@ -150,9 +147,6 @@ class KeywordTree(object):
     def search_lss(self, state):
         if state.longest_strict_suffix is None:
             parent = state.parent
-            if parent.longest_strict_suffix is None:
-                # Has not been done yet. Do early
-                self.search_lss(parent)
             traversed = parent.longest_strict_suffix
             while True:
                 if state.symbol in traversed.transitions and\
@@ -164,11 +158,10 @@ class KeywordTree(object):
                     state.longest_strict_suffix = self._zero_state
                     break
                 else:
-                    if traversed.longest_strict_suffix is None:
-                        self.search_lss(traversed)
                     traversed = traversed.longest_strict_suffix
             suffix = state.longest_strict_suffix
-
+            if suffix.longest_strict_suffix is None:
+                self.search_lss(suffix)
             for symbol, next_state in suffix.transitions.items():
                 if (symbol not in state.transitions and
                         suffix != self._zero_state):
