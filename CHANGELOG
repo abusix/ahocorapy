@@ -1,0 +1,39 @@
+1.4.2
+-fixed issue #2 (more false negatives) thx @maxtepkeev
+-improved test coverage
+
+1.4.1
+-fixed issue #1 (false negatives) thx @maxtepkeev
+-improved test coverage
+
+1.4.0
+-implemented search_all method for finding all keywords
+
+1.3.1
+-no more shortcutting using zero state transitions (a little more cpu load, a lot smaller memory footprint)
+-fixed visualizer for 1.3.0 changes
+
+1.3.0
+-major rework of the core implementation and its data structure
+-added wheel release
+
+1.2.1
+-py2/3 compatibility fix in test
+
+1.2.0
+-got rid of Finalizer class, replaced by method in KeywordTree
+-pep8 compliance and check in CI
+
+1.1.2
+-minor changes concerning pypi release
+
+1.1.1
+-minor changes concerning pypi release
+
+1.1.0
+-first open source release
+-added performance comparisons to readme
+-slightly simplified shortcutting mechanism as compared to earlier versions
+
+<=1.0.0
+-internal releases
