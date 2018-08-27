@@ -173,14 +173,12 @@ class KeywordTree(object):
         return "ahocorapy KeywordTree"
 
     def __getstate__(self):
-        state_list = []
+        state_list = [None] * self._counter
         todo_list = [self._zero_state]
         while todo_list:
             state = todo_list.pop()
             transitions = {key: value.identifier for key,
                            value in state.transitions.items()}
-            state_list = state_list + [None] * \
-                (state.identifier + 1 - len(state_list))
             state_list[state.identifier] = {
                 'symbol': state.symbol,
                 'success': state.success,
@@ -204,12 +202,11 @@ class KeywordTree(object):
         self._case_insensitive = state['case_insensitive']
         self._counter = state['counter']
         self._finalized = state['finalized']
-        states = []
+        states = [None] * len(state['states'])
         for idx, serialized_state in enumerate(state['states']):
             deserialized_state = State(idx, serialized_state['symbol'])
             deserialized_state.success = serialized_state['success']
             deserialized_state.matched_keyword = serialized_state['matched_keyword']
-            states = states + [None] * (idx + 1 - len(states))
             states[idx] = deserialized_state
         for idx, serialized_state in enumerate(state['states']):
             deserialized_state = states[idx]
