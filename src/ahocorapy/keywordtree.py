@@ -27,7 +27,8 @@ class State(object):
         self.longest_strict_suffix = None
 
     def __str__(self):
-        transitions_as_string = ','.join(['{0} -> {1}'.format(key, value.identifier) for key, value in self.transitions.items()])
+        transitions_as_string = ','.join(
+            ['{0} -> {1}'.format(key, value.identifier) for key, value in self.transitions.items()])
         return "State {0}. Transitions: {1}".format(self.identifier, transitions_as_string)
 
 
@@ -170,14 +171,16 @@ class KeywordTree(object):
 
     def __str__(self):
         return "ahocorapy KeywordTree"
-    
+
     def __getstate__(self):
         state_list = []
         todo_list = [self._zero_state]
         while todo_list:
             state = todo_list.pop()
-            transitions = { key: value.identifier for key, value in state.transitions.items() }
-            state_list = state_list + [None] * (state.identifier + 1 - len(state_list))
+            transitions = {key: value.identifier for key,
+                           value in state.transitions.items()}
+            state_list = state_list + [None] * \
+                (state.identifier + 1 - len(state_list))
             state_list[state.identifier] = {
                 'symbol': state.symbol,
                 'success': state.success,
@@ -206,17 +209,19 @@ class KeywordTree(object):
             deserialized_state = State(idx, serialized_state['symbol'])
             deserialized_state.success = serialized_state['success']
             deserialized_state.matched_keyword = serialized_state['matched_keyword']
-            states = states + [None] * (idx+ 1 - len(states))
+            states = states + [None] * (idx + 1 - len(states))
             states[idx] = deserialized_state
         for idx, serialized_state in enumerate(state['states']):
             deserialized_state = states[idx]
             if serialized_state['longest_strict_suffix'] is not None:
-                deserialized_state.longest_strict_suffix = states[serialized_state['longest_strict_suffix']]
+                deserialized_state.longest_strict_suffix = states[
+                    serialized_state['longest_strict_suffix']]
             else:
                 deserialized_state.longest_strict_suffix = None
             if serialized_state['parent'] is not None:
                 deserialized_state.parent = states[serialized_state['parent']]
             else:
                 deserialized_state.parent = None
-            deserialized_state.transitions = { key: states[value] for key, value in serialized_state['transitions'].items() }
+            deserialized_state.transitions = {
+                key: states[value] for key, value in serialized_state['transitions'].items()}
         self._zero_state = states[0]
