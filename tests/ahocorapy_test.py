@@ -294,6 +294,37 @@ class TestAhocorapy(unittest.TestCase):
         self.assertEqual(('frodo', 20), next(results))
         self.assertEqual(('gandalf', 31), next(results))
 
+    def test_pickling_before_finalizing(self):
+        words = ['peter', 'horst', 'gandalf', 'frodo']
+        tree = KeywordTree(case_insensitive=True)
+        for word in words:
+            tree.add(word)
+        as_bytes = dumps(tree)
+
+        self.assertIsNotNone(as_bytes)
+
+        deserialized = loads(as_bytes)
+
+        self.assertIsNotNone(deserialized)
+
+        deserialized.finalize()
+
+        text = 'Gollum did not like frodo. But gandalf did.'
+
+        results = deserialized.search_all(text)
+
+        self.assertEqual(('frodo', 20), next(results))
+        self.assertEqual(('gandalf', 31), next(results))
+
+    def test_state_to_string(self):
+        words = ['peter', 'horst', 'gandalf', 'frodo']
+        tree = KeywordTree(case_insensitive=True)
+        for word in words:
+            tree.add(word)
+        tree.finalize()
+        as_string = str(tree._zero_state)
+        self.assertIsNotNone(as_string)
+
 
 if __name__ == '__main__':
     unittest.main()
