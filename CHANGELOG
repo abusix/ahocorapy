@@ -1,3 +1,6 @@
+1.5.0
+-implemented non-recursive pickling (de-/serialization)
+
 1.4.2
 -fixed issue #2 (more false negatives) thx @maxtepkeev
 -improved test coverage
