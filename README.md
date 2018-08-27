@@ -35,6 +35,8 @@ because the number of transitions is higher, because they are all included expli
 
 - We added a small tool that helps you visualize the resulting graph. This may help understanding the algorithm, if you'd like. See below.
 
+- Fully pickleable (pythons built-in de-/serialization). ahocorapy uses a non-recursive custom implementation for de-/serialization so that even huge keyword trees can be pickled.
+
 ### Performance
 
 I compared the two libraries mentioned above with ahocorapy. We used 50,000 keywords long list and an input text of 34,199 characters.
