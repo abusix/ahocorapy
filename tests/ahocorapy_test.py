@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from builtins import str
 from io import open
+from pickle import dumps, loads
 import unittest
 
 
@@ -271,6 +272,28 @@ class TestAhocorapy(unittest.TestCase):
         self.assertEqual(('/foo/', 0), next(results))
         self.assertEqual(('foo/', 1), next(results))
         self.assertEqual(('/bar', 4), next(results))
+
+    def test_pickling_simple(self):
+        words = ['peter', 'horst', 'gandalf', 'frodo']
+        tree = KeywordTree(case_insensitive=True)
+        for word in words:
+            tree.add(word)
+        tree.finalize()
+        as_bytes = dumps(tree)
+
+        self.assertIsNotNone(as_bytes)
+
+        deserialized = loads(as_bytes)
+
+        self.assertIsNotNone(deserialized)
+
+        text = 'Gollum did not like frodo. But gandalf did.'
+
+        results = deserialized.search_all(text)
+
+        self.assertEqual(('frodo', 20), next(results))
+        self.assertEqual(('gandalf', 31), next(results))
+
 
 if __name__ == '__main__':
     unittest.main()
