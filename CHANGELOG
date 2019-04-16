@@ -1,3 +1,7 @@
+1.5.2
+-fixed long_description for pypi.org (use new markdown type)
+-declared python 3.7 compatibility
+
 1.5.1
 -improved pickling performance
 
