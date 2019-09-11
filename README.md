@@ -1,4 +1,4 @@
-[![Python Test](https://github.com/actions/abusix/ahocorapy/Python%20test/badge.svg)](https://github.com/abusix/ahocorapy/actions)
+[![Python Test](https://github.com/abusix/ahocorapy/workflows/Python%20test/badge.svg)](https://github.com/abusix/ahocorapy/actions)
 [![Test Coverage](https://img.shields.io/coveralls/github/abusix/ahocorapy/master.svg)](https://coveralls.io/github/abusix/ahocorapy)
 [![Downloads](https://pepy.tech/badge/ahocorapy)](https://pepy.tech/project/ahocorapy)
 [![PyPi Version](https://img.shields.io/pypi/v/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
