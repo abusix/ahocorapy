@@ -116,6 +116,12 @@ Prints :
 ('lacrosse', 23)
 ```
 
+### Thread Safety
+
+The construction of the tree is currently NOT thread safe. That means `add`ing shouldn't be called multiple times concurrently. Behavior is undefined.
+
+After `finalize` is called you can use the `search` functionality on the same tree from multiple threads at the same time. So that part is thread safe.
+
 ## Drawing Graph
 
 You can print the underlying graph with the Visualizer class.
