@@ -162,11 +162,12 @@ class KeywordTree(object):
                 else:
                     traversed = traversed.longest_strict_suffix
             suffix = state.longest_strict_suffix
+            if suffix == self._zero_state:
+                return
             if suffix.longest_strict_suffix is None:
                 self.search_lss(suffix)
             for symbol, next_state in suffix.transitions.items():
-                if (symbol not in state.transitions and
-                        suffix != self._zero_state):
+                if symbol not in state.transitions:
                     state.transitions[symbol] = next_state
 
     def __str__(self):
