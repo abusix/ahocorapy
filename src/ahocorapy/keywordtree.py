@@ -147,27 +147,27 @@ class KeywordTree(object):
                     to_process.append(child)
 
     def search_lss(self, state):
-        if state.longest_strict_suffix is None:
-            parent = state.parent
-            traversed = parent.longest_strict_suffix
-            while True:
-                if state.symbol in traversed.transitions and\
-                        traversed.transitions[state.symbol] != state:
-                    state.longest_strict_suffix =\
-                        traversed.transitions[state.symbol]
-                    break
-                elif traversed == self._zero_state:
-                    state.longest_strict_suffix = self._zero_state
-                    break
-                else:
-                    traversed = traversed.longest_strict_suffix
-            suffix = state.longest_strict_suffix
-            if suffix.longest_strict_suffix is None:
-                self.search_lss(suffix)
-            for symbol, next_state in suffix.transitions.items():
-                if (symbol not in state.transitions and
-                        suffix != self._zero_state):
-                    state.transitions[symbol] = next_state
+        parent = state.parent
+        traversed = parent.longest_strict_suffix
+        while True:
+            if state.symbol in traversed.transitions and\
+                    traversed.transitions[state.symbol] != state:
+                state.longest_strict_suffix =\
+                    traversed.transitions[state.symbol]
+                break
+            elif traversed == self._zero_state:
+                state.longest_strict_suffix = self._zero_state
+                break
+            else:
+                traversed = traversed.longest_strict_suffix
+        suffix = state.longest_strict_suffix
+        if suffix == self._zero_state:
+            return
+        if suffix.longest_strict_suffix is None:
+            self.search_lss(suffix)
+        for symbol, next_state in suffix.transitions.items():
+            if symbol not in state.transitions:
+                state.transitions[symbol] = next_state
 
     def __str__(self):
         return "ahocorapy KeywordTree"
