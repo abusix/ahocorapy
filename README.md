@@ -52,19 +52,30 @@ I also added measurements for the pure python libraries with run with pypy.
 
 These are the results:
 
-| Library (Variant)                                  | Setup (1x) | Search (100x) |
-|----------------------------------------------------|------------|---------------|
-| ahocorapy                                          | 1.2s       | 1.76s         |
-| ahocorapy (run with pypy)                          | 0.9s       | 0.09s         |
-| pyahocorasick                                      | 0.1s       | 0.06s         |
-| pyahocorasick (pure python variant in github repo) | 0.5s       | 1.68s         |
-| py_aho_corasick                                    | 1.9s       | 13.2s         |
-| py_aho_corasick (run with pypy)                    | 1.3s       | 3.71s         |
+| Library (Variant)                                    | Setup (1x)  | Search (100x) |
+|------------------------------------------------------|-------------|---------------|
+| ahocorapy*                                           | 0.33s       | 0.51s         |
+| ahocorapy (run with pypy)*                           | 0.37s       | 0.10s         |
+| pyahocorasick*                                       | 0.03s       | 0.04s         |
+| pyahocorasick (run with pypy)*                       | 0.08s       | 0.04s         |
+| pyahocorasick (pure python variant in github repo)** | 0.50s       | 1.68s         |
+| py_aho_corasick*                                     | 0.82s       | 6.80s         |
+| py_aho_corasick (run with pypy)*                     | 0.70s       | 2.01s         |
 
 As expected the C-Extension shatters the pure python implementations. Even though there is probably still room for optimization in
 ahocorapy we are not going to get to the mark that pyahocorasick sets. ahocorapy's lookups are faster than py_aho_corasick. 
-When run with pypy [PyPy 5.1.2 with GCC 5.3.1 20160413] ahocorapy is almost as fast as pyahocorasick, at least when it comes to
+When run with pypy ahocorapy is almost as fast as pyahocorasick, at least when it comes to
 searching. The setup overhead is higher due to the suffix shortcutting mechanism used.
+
+\* Specs
+
+Dell XPS 15 7590  
+CPU: Intel i9-9980HK (16) @ 5.000GHz  
+CPython: 3.8.2  
+pypy: PyPy 7.3.1 with GCC 7.3.1 20180303  
+Date tested: 2020-08-19  
+
+\** Old measurement with different specs
 
 
 ## Basic Usage:
