@@ -24,4 +24,4 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest-cov msgpack-python python-coveralls pytest-pep8
-        py.test --pep8 src/ahocorapy/ --cov src/ahocorapy/ --cov-report term-missing tests/ahocorapy_test.py
+        pytest -W ignore::pytest.PytestDeprecationWarning --pep8 src/ahocorapy/ --cov src/ahocorapy/ --cov-report term-missing tests/ahocorapy_test.py

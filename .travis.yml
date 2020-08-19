@@ -14,7 +14,7 @@ install:
   - pip install -e .
   
 script:
-  - py.test --pep8 src/ahocorapy/ --cov src/ahocorapy/ --cov-report term-missing  tests/ahocorapy_test.py
+  - pytest -W ignore::pytest.PytestDeprecationWarning --pep8 src/ahocorapy/ --cov src/ahocorapy/ --cov-report term-missing  tests/ahocorapy_test.py
 
 after_success:
   - coveralls
