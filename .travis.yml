@@ -9,7 +9,7 @@ python:
   - "pypy3"
 
 install:
-  - pip install pytest-cov msgpack-python python-coveralls pytest-pep8
+  - pip install pytest-cov msgpack-python coveralls pytest-pep8
   - pip install -e .
   
 script:
