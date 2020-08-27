@@ -118,7 +118,7 @@ class KeywordTree(object):
                 symbol, self._zero_state.transitions.get(symbol,
                                                          self._zero_state))
             state = current_state
-            while state != self._zero_state:
+            while state is not self._zero_state:
                 if state.success:
                     keyword = state.matched_keyword
                     yield (keyword, idx + 1 - len(keyword))
@@ -151,17 +151,17 @@ class KeywordTree(object):
         traversed = parent.longest_strict_suffix
         while True:
             if state.symbol in traversed.transitions and\
-                    traversed.transitions[state.symbol] != state:
+                    traversed.transitions[state.symbol] is not state:
                 state.longest_strict_suffix =\
                     traversed.transitions[state.symbol]
                 break
-            elif traversed == self._zero_state:
+            elif traversed is self._zero_state:
                 state.longest_strict_suffix = self._zero_state
                 break
             else:
                 traversed = traversed.longest_strict_suffix
         suffix = state.longest_strict_suffix
-        if suffix == self._zero_state:
+        if suffix is self._zero_state:
             return
         if suffix.longest_strict_suffix is None:
             self.search_lss(suffix)
