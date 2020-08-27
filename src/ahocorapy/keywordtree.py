@@ -112,13 +112,13 @@ class KeywordTree(object):
                              ' No search allowed. Call finalize() first.')
         if self._case_insensitive:
             text = text.lower()
-        current_state = self._zero_state
+        zero_state = self._zero_state
+        current_state = zero_state
         for idx, symbol in enumerate(text):
             current_state = current_state.transitions.get(
-                symbol, self._zero_state.transitions.get(symbol,
-                                                         self._zero_state))
+                symbol, zero_state.transitions.get(symbol, zero_state))
             state = current_state
-            while state is not self._zero_state:
+            while state is not zero_state:
                 if state.success:
                     keyword = state.matched_keyword
                     yield (keyword, idx + 1 - len(keyword))
@@ -147,6 +147,7 @@ class KeywordTree(object):
                     to_process.append(child)
 
     def search_lss(self, state):
+        zero_state = self._zero_state
         parent = state.parent
         traversed = parent.longest_strict_suffix
         while True:
@@ -155,13 +156,13 @@ class KeywordTree(object):
                 state.longest_strict_suffix =\
                     traversed.transitions[state.symbol]
                 break
-            elif traversed is self._zero_state:
-                state.longest_strict_suffix = self._zero_state
+            elif traversed is zero_state:
+                state.longest_strict_suffix = zero_state
                 break
             else:
                 traversed = traversed.longest_strict_suffix
         suffix = state.longest_strict_suffix
-        if suffix is self._zero_state:
+        if suffix is zero_state:
             return
         if suffix.longest_strict_suffix is None:
             self.search_lss(suffix)
