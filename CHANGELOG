@@ -1,3 +1,6 @@
+1.6.1
+- performance optimizations PR #11 (thanks @amirouche)
+
 1.6.0
 -fixed #8 (performance improvement for setup)
 -declared python 3.8 compatibility

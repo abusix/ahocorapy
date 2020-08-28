@@ -54,13 +54,13 @@ These are the results:
 
 | Library (Variant)                                    | Setup (1x)  | Search (100x) |
 |------------------------------------------------------|-------------|---------------|
-| ahocorapy*                                           | 0.33s       | 0.51s         |
-| ahocorapy (run with pypy)*                           | 0.37s       | 0.10s         |
+| ahocorapy*                                           | 0.32s       | 0.36s         |
+| ahocorapy (run with pypy)*                           | 0.36s       | 0.10s         |
 | pyahocorasick*                                       | 0.03s       | 0.04s         |
 | pyahocorasick (run with pypy)*                       | 0.08s       | 0.04s         |
 | pyahocorasick (pure python variant in github repo)** | 0.50s       | 1.68s         |
-| py_aho_corasick*                                     | 0.82s       | 6.80s         |
-| py_aho_corasick (run with pypy)*                     | 0.70s       | 2.01s         |
+| py_aho_corasick*                                     | 0.77s       | 6.02s         |
+| py_aho_corasick (run with pypy)*                     | 0.72s       | 2.11s         |
 
 As expected the C-Extension shatters the pure python implementations. Even though there is probably still room for optimization in
 ahocorapy we are not going to get to the mark that pyahocorasick sets. ahocorapy's lookups are faster than py_aho_corasick. 
@@ -73,7 +73,7 @@ Dell XPS 15 7590
 CPU: Intel i9-9980HK (16) @ 5.000GHz  
 CPython: 3.8.2  
 pypy: PyPy 7.3.1 with GCC 7.3.1 20180303  
-Date tested: 2020-08-19  
+Date tested: 2020-08-28  
 
 \** Old measurement with different specs
 
