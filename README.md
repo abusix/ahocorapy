@@ -1,4 +1,4 @@
-[![Python Test](https://github.com/abusix/ahocorapy/workflows/Python%20test/badge.svg)](https://github.com/abusix/ahocorapy/actions)
+[![Test](https://img.shields.io/github/workflow/status/abusix/ahocorapy/test/master)](https://github.com/abusix/ahocorapy/actions)
 [![Test Coverage](https://img.shields.io/coveralls/github/abusix/ahocorapy/master.svg)](https://coveralls.io/github/abusix/ahocorapy)
 [![Downloads](https://pepy.tech/badge/ahocorapy)](https://pepy.tech/project/ahocorapy)
 [![PyPi Version](https://img.shields.io/pypi/v/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
@@ -16,23 +16,23 @@ Given a list of keywords one can check if at least one of the keywords exist in 
 ### Why another Aho-Corasick implementation?
 
 We started working on this in the beginning of 2016. Our requirements included unicode support combined with python2.7. That
-was impossible with C-extension based libraries (like [pyahocorasick](https://github.com/WojciechMula/pyahocorasick/)). Pure 
-python libraries were very slow or unusable due to memory explosion. Since then another pure python library was released 
+was impossible with C-extension based libraries (like [pyahocorasick](https://github.com/WojciechMula/pyahocorasick/)). Pure
+python libraries were very slow or unusable due to memory explosion. Since then another pure python library was released
 [py-aho-corasick](https://github.com/JanFan/py-aho-corasick). The repository also contains some discussion about different
-implementations. 
-There is also [acora](https://github.com/scoder/acora), but it includes the note ('current construction algorithm is not 
+implementations.
+There is also [acora](https://github.com/scoder/acora), but it includes the note ('current construction algorithm is not
 suitable for really large sets of keywords') which really was the case the last time I tested, because RAM ran out quickly.
 
 ### Differences
 
 - Compared to [pyahocorasick](https://github.com/WojciechMula/pyahocorasick/) our library supports unicode in python 2.7 just like [py-aho-corasick](https://github.com/JanFan/py-aho-corasick).
-We don't use any C-Extension so the library is not platform dependant.
+  We don't use any C-Extension so the library is not platform dependant.
 
 - On top of the standard Aho-Corasick longest suffix search, we also perform a shortcutting routine in the end, so
-that our lookup is fast while, the setup takes longer. During set up we go through the states and directly add transitions that are
-"offered" by the longest suffix or their longest suffixes. This leads to faster lookup times, because in the end we only have to
-follow simple transitions and don't have to perform any additional suffix lookup. It also leads to a bigger memory footprint,
-because the number of transitions is higher, because they are all included explicitely and not implicitely hidden by suffix pointers.
+  that our lookup is fast while, the setup takes longer. During set up we go through the states and directly add transitions that are
+  "offered" by the longest suffix or their longest suffixes. This leads to faster lookup times, because in the end we only have to
+  follow simple transitions and don't have to perform any additional suffix lookup. It also leads to a bigger memory footprint,
+  because the number of transitions is higher, because they are all included explicitely and not implicitely hidden by suffix pointers.
 
 - We added a small tool that helps you visualize the resulting graph. This may help understanding the algorithm, if you'd like. See below.
 
@@ -52,18 +52,18 @@ I also added measurements for the pure python libraries with run with pypy.
 
 These are the results:
 
-| Library (Variant)                                    | Setup (1x)  | Search (100x) |
-|------------------------------------------------------|-------------|---------------|
-| ahocorapy*                                           | 0.32s       | 0.36s         |
-| ahocorapy (run with pypy)*                           | 0.36s       | 0.10s         |
-| pyahocorasick*                                       | 0.03s       | 0.04s         |
-| pyahocorasick (run with pypy)*                       | 0.08s       | 0.04s         |
-| pyahocorasick (pure python variant in github repo)** | 0.50s       | 1.68s         |
-| py_aho_corasick*                                     | 0.77s       | 6.02s         |
-| py_aho_corasick (run with pypy)*                     | 0.72s       | 2.11s         |
+| Library (Variant)                                      | Setup (1x) | Search (100x) |
+| ------------------------------------------------------ | ---------- | ------------- |
+| ahocorapy\*                                            | 0.32s      | 0.36s         |
+| ahocorapy (run with pypy)\*                            | 0.36s      | 0.10s         |
+| pyahocorasick\*                                        | 0.03s      | 0.04s         |
+| pyahocorasick (run with pypy)\*                        | 0.08s      | 0.04s         |
+| pyahocorasick (pure python variant in github repo)\*\* | 0.50s      | 1.68s         |
+| py_aho_corasick\*                                      | 0.77s      | 6.02s         |
+| py_aho_corasick (run with pypy)\*                      | 0.72s      | 2.11s         |
 
 As expected the C-Extension shatters the pure python implementations. Even though there is probably still room for optimization in
-ahocorapy we are not going to get to the mark that pyahocorasick sets. ahocorapy's lookups are faster than py_aho_corasick. 
+ahocorapy we are not going to get to the mark that pyahocorasick sets. ahocorapy's lookups are faster than py_aho_corasick.
 When run with pypy ahocorapy is almost as fast as pyahocorasick, at least when it comes to
 searching. The setup overhead is higher due to the suffix shortcutting mechanism used.
 
@@ -73,10 +73,9 @@ Dell XPS 15 7590
 CPU: Intel i9-9980HK (16) @ 5.000GHz  
 CPython: 3.8.2  
 pypy: PyPy 7.3.1 with GCC 7.3.1 20180303  
-Date tested: 2020-08-28  
+Date tested: 2020-08-28
 
-\** Old measurement with different specs
-
+\*\* Old measurement with different specs
 
 ## Basic Usage:
 
@@ -107,6 +106,7 @@ print(result)
 ```
 
 Prints :
+
 ```python
 ('malaga', 24)
 ```
@@ -120,6 +120,7 @@ for result in results:
 ```
 
 Prints :
+
 ```python
 ('mallorca', 11)
 ('orca', 15)
@@ -144,7 +145,6 @@ visualizer = Visualizer()
 visualizer.draw('readme_example.png', kwtree)
 ```
 
-The resulting .png of the graph looks like this: 
+The resulting .png of the graph looks like this:
 
 ![graph for kwtree](https://raw.githubusercontent.com/abusix/ahocorapy/master/img/readme_example.png "Keyword Tree")
-
