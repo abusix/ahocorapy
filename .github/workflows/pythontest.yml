@@ -22,8 +22,8 @@ jobs:
           pip install -e .
       - name: Test with pytest
         run: |
-          pip install pytest-cov msgpack-python python-coveralls pytest-pep8
-          pytest -W ignore::pytest.PytestDeprecationWarning --pep8 src/ahocorapy/ --cov src/ahocorapy/ --cov-report=xml tests/ahocorapy_test.py
+          pip install pytest-cov msgpack-python
+          pytest --cov src/ahocorapy/ --cov-report=xml tests/ahocorapy_test.py
       - name: Upload coverage info to codecov
         run: |
           curl -s https://codecov.io/bash | bash
