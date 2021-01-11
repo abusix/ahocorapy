@@ -1,5 +1,5 @@
 [![Test](https://img.shields.io/github/workflow/status/abusix/ahocorapy/test/master)](https://github.com/abusix/ahocorapy/actions)
-[![Test Coverage](https://img.shields.io/coveralls/github/abusix/ahocorapy/master.svg)](https://coveralls.io/github/abusix/ahocorapy)
+[![Test Coverage](https://img.shields.io/codecov/c/gh/abusix/ahocorapy/master)](https://codecov.io/gh/abusix/ahocorapy)
 [![Downloads](https://pepy.tech/badge/ahocorapy)](https://pepy.tech/project/ahocorapy)
 [![PyPi Version](https://img.shields.io/pypi/v/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
 [![PyPi License](https://img.shields.io/pypi/l/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
