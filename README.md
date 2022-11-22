@@ -54,13 +54,13 @@ These are the results:
 
 | Library (Variant)                                      | Setup (1x) | Search (100x) |
 | ------------------------------------------------------ | ---------- | ------------- |
-| ahocorapy\*                                            | 0.32s      | 0.36s         |
-| ahocorapy (run with pypy)\*                            | 0.36s      | 0.10s         |
-| pyahocorasick\*                                        | 0.03s      | 0.04s         |
-| pyahocorasick (run with pypy)\*                        | 0.08s      | 0.04s         |
+| ahocorapy\*                                            | 0.30s      | 0.29s         |
+| ahocorapy (run with pypy)\*                            | 0.37s      | 0.10s         |
+| pyahocorasick\*                                        | 0.04s      | 0.04s         |
+| pyahocorasick (run with pypy)\*                        | 0.10s      | 0.05s         |
 | pyahocorasick (pure python variant in github repo)\*\* | 0.50s      | 1.68s         |
-| py_aho_corasick\*                                      | 0.77s      | 6.02s         |
-| py_aho_corasick (run with pypy)\*                      | 0.72s      | 2.11s         |
+| py_aho_corasick\*                                      | 0.72s      | 4,60s         |
+| py_aho_corasick (run with pypy)\*                      | 0.83s      | 2.02s         |
 
 As expected the C-Extension shatters the pure python implementations. Even though there is probably still room for optimization in
 ahocorapy we are not going to get to the mark that pyahocorasick sets. ahocorapy's lookups are faster than py_aho_corasick.
@@ -68,12 +68,12 @@ When run with pypy ahocorapy is almost as fast as pyahocorasick, at least when i
 searching. The setup overhead is higher due to the suffix shortcutting mechanism used.
 
 \* Specs
-
-Dell XPS 15 7590  
-CPU: Intel i9-9980HK (16) @ 5.000GHz  
-CPython: 3.8.2  
-pypy: PyPy 7.3.1 with GCC 7.3.1 20180303  
-Date tested: 2020-08-28
+  
+CPU: AMD Ryzen 2700X
+Linux Kernel: 6.0.6
+CPython: 3.11.0  
+pypy: PyPy 7.3.9 (Python 3.9.12) with GCC 10.2.1 20210130
+Date tested: 2022-11-22
 
 \*\* Old measurement with different specs
 
