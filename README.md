@@ -70,9 +70,13 @@ searching. The setup overhead is higher due to the suffix shortcutting mechanism
 \* Specs
   
 CPU: AMD Ryzen 2700X
+
 Linux Kernel: 6.0.6
+
 CPython: 3.11.0  
+
 pypy: PyPy 7.3.9 (Python 3.9.12) with GCC 10.2.1 20210130
+
 Date tested: 2022-11-22
 
 \*\* Old measurement with different specs
