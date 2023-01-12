@@ -1,4 +1,4 @@
-[![Test](https://img.shields.io/github/workflow/status/abusix/ahocorapy/test/master)](https://github.com/abusix/ahocorapy/actions)
+[![Test](https://img.shields.io/github/actions/workflow/status/abusix/ahocorapy/pythontest.yml?branch=master)](https://github.com/abusix/ahocorapy/actions)
 [![Test Coverage](https://img.shields.io/codecov/c/gh/abusix/ahocorapy/master)](https://codecov.io/gh/abusix/ahocorapy)
 [![Downloads](https://pepy.tech/badge/ahocorapy)](https://pepy.tech/project/ahocorapy)
 [![PyPi Version](https://img.shields.io/pypi/v/ahocorapy.svg)](https://pypi.python.org/pypi/ahocorapy)
